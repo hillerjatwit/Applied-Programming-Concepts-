@@ -1,0 +1,30 @@
+Incremental Development Timeline:
+If the software development cycle uses the incremental development system, the primary objective is to allow students to view and register for courses and allow faculty and admin to also view and modify this data. As a result, the basic functionality will be the main priority, and additional improvements to the user experience will be implemented in future releases.
+Stage 1 – Simple system:
+-	A simple database to store class information and user details for students, faculty and admins, as well as course information
+-	A table for each user type (student, faculty, admin), with first and last names and ID as the main attributes. Additionally, there will be some unique attributes/functionality depending on the user type.
+o	Student
+	Registered courses and schedule
+	View and search courses
+	Add/drop courses
+o	Faculty
+	View course roster and available courses
+	Print their schedules
+o	Admin
+	Add/remove users
+	Search and print rosters/courses.
+-	A table to store the course catalogue and additional information.
+o	Course name
+o	CRN
+o	Course dates/times
+o	Professors associated with the course
+-	A login interface that requires the correct credentials to login. In the initial release, there are no additional features such as 2-factor authentication or overriding student restrictions. There will be an option to reset a password in case the user forgets their password.
+With this simple system developed and tested, it would then be released for utilization by the school, with continuous observation of user feedback as additional features are designed for future releases.
+Stage 2 – Additional Features:
+-	Add functionality to create multiple schedules, make printouts for schedules, and create preferences for schedules.
+-	Add course restrictions and prerequisites, which will prevent a student from registering for a course if they do not meet these.
+-	Add student count for each course.
+-	Allow admin to add/remove students from courses regardless of requirements and prerequisites met.
+-	Design an aesthetically pleasing user interface for users to interact with.
+-	Add 2-factor authentication to the login.
+-	Any additional feedback received by the users of the system. This will not take precedence over the other planned features unless it is an issue that cannot be ignored

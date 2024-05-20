@@ -25,3 +25,7 @@ Micah Rieley Notes:
 Incremental Development 
 
 I like how you added each section of the user as different versions, the only thing I would say is that it may complicate things by having a fully flushed out version of the student created and then create a full version of the professor and then the admin. It could complicate things as for some interactions, instead of creating simple interactions first and then making them more advanced, you’d just start by creating an advanced version which may make things a bit more difficult  
+
+Regis's Notes:
+- A feature should be added to the student/course table - restrictions/prerequisites. This is to prevent the student from registering to classes that they are otherwise not eligible to do
+- I think this system is a bit tricky to incorporate in practice- If you deploy the first version to users, nobody can use it, as the admin account is required to add users to the system. I think it needs to be reworked such that there is at least the admin and student class in the first release.

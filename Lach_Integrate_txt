@@ -15,3 +15,6 @@ With the database and UI configured, the next step is to deploy the system for u
 Jared Hiller Notes:
 How are we going to test this, any ideas of testing frameworks we can use to test the UI, and do you wanna automates test or not.
 
+
+Micah Rieley Notes:
+How will each stage be tested other then that i like what you wrote 

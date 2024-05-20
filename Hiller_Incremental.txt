@@ -12,3 +12,6 @@ Billy-
 Jared, I would recommend being more specific in your Incremental Development model. Instead of broadly saying "Users", I would instead 
 list what you want specific classes to be able to do in each version. I feel that this would help make what needs to be done for each class 
 more obvious.
+
+Regis's Notes:
+I think this is lacking a better release structure- What features should be allocated to future releases vs ones that need to be in the first version?

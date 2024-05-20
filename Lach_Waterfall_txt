@@ -1,0 +1,50 @@
+Waterfall Timeline:
+With the waterfall development process, the ideal starting point would have to begin with the database- as all other features of the Leopard-Web system will rely on it. This will be composed of several tables that store information for each user type, as well as the courses available. This can be designed as follows:
+
+Stage 1 – Create Database: 
+-	Create a database that contains the necessary tables and column names for the required information.
+o	Table 1: Student
+  	Registered courses
+  	Restrictions (if any)
+  	School year and expected graduation date
+  	Credit hours required for school year
+o	Table 2: Faculty
+  	Courses they are teaching
+o	Table 3: Admin
+  	Admin does not need special attributes as their main role is function related.
+o	Table 4: Course
+  	Course name
+  	Course prerequisites
+  	CRN
+  	Schedule and time
+  	Instructor
+  	Availability
+  	ID of registered students
+-	Additionally, each user would have a set of column names that are the same between user types, of which are:
+  o	First and last name
+  o	ID
+
+Stage 2 – Functions:
+-	All users will be given the following:
+  o	A login interface will be designed that allows users to login to their accounts. This will be created with options to reset a password and require 2-factor authentication for security purposes.
+-	Student
+  o	Register for courses (if prerequisites are met and there are no restrictions)
+  o	View available courses
+  o	Print schedule
+  o	Add/drop courses from their schedule
+  o	Create multiple plans that they can select on registration day
+-	Faculty
+  o	View courses and course roster
+  o	Print their schedule
+-	Admin
+  o	Add/remove courses to/from the system
+  o	Add/remove users
+  o	Add/remove students from a course (regardless of met prerequisites/requirements)
+  o	Search roster/courses
+  o	Print roster/courses
+
+Stage 3 – User Interface:
+With the primary functionality created and tested, the next phase of the project would be to create a user interface that is easy to navigate and utilize. Examples of this would include displaying a depiction of a student’s schedule out on a per-week calendar, as opposed to just displaying their course names and times. Features like this give better visualization of how a course might fit into an existing schedule, or perhaps to get a better sense of their course load.
+
+Stage 4 – Release and feedback: 
+After each stage is completed and tested for issues, the system is then released to the school for use. The designers will then wait for user feedback and address any potentially missing bugs/issues, but otherwise, the system’s primary functionality is complete.

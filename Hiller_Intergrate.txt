@@ -8,3 +8,6 @@ Integrate and Configure
 
 Micah Rieley Notes:
 I really like what you wrote although i think integrating and utilizing selenium, Nunit, some of the other tools may be a but more in depth them what we need for this project but for a big/professional setting it would definetly be a good idea
+
+Regis's Notes:
+Some software choices could be better explained/rationalized- ex- why were these picked over other options available?

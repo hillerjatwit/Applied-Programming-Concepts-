@@ -6,8 +6,8 @@ Software can support a different variety of users.
 •	All users will be able to see and request to change their personal information and view schedules.
 o	Display weekly class schedule for user.
 o	Display personal information for users in table.
-o	All users will have a name, email address, gender, DoB, ID
-•	Students will be able to view, add and drop classes, requestion meetings with advisors, review their degree audit and required classes.
+o	All users will have a name, email address, ID
+•	Students will be able to view, add and drop classes, review their degree audit and required classes.
 o	Students will be able to see major, minor, and personal information when requested.
 o	Able to set up and adjust meetings with advisors and other faculty.
 o	Able to add and drop classes from their schedule.
@@ -30,3 +30,7 @@ Let users test the product and fix any bugs found and any security flaws.
 
 Micah Rieley Notes: 
 I would expand a bit more on the Implementation and unit testing, the integration and system testing and the operation and maintenance section of the report. For example, instead of just sating integrate components and test them, maybe expand on how each user type may gave unique interactions with each other such as admins adding and removing courses which could affect the users or professors. 
+
+Regis's Notes:
+- I don't think we need information such as gender and DoB here, as the primary function of this is to view and register for courses, with those two attributes not being important for that. I removed it as a result.
+- Otherwise I think this covers everything needed for a course-registering system

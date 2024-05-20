@@ -82,6 +82,13 @@ Operation and Maintenance
 Let other people try and use it. This will help get as many different ways to test as possible as people will try and break the code in unique ways.  
 
 
+
 Regis's comments:
 In op and maintenance, the testing process would not be done here, instead in implementation and unit testing
 - A UI sytem is missing from the model
+
+ 
+Billy- 
+Micah, I would suggest adding a few notes into your waterfall method. Especially under the Design for System section just to make 
+the what the functions can do and the restrictions on them more obvious. 
+

@@ -1,0 +1,10 @@
+Integrate and Configure
+1.	Use Visual Studio and C# to develop classes and functions that will be able to store user information and show information to the user through the command line. 
+2.	Use PostgreSQL and a Linux host to host a database to store all users information and link it to visual studio through … package
+3.	Use Qt to develop a user interface for the software instead of using the command line. Underneath the UI, the code we developed before implementing the UI will be able take in user inputs and display and update what the user needs. 
+4.	Use Nunit and Selenium to develop tests for our software by simulating button clicks and keyboard strokes that would be made by a user. 
+
+
+
+Micah Rieley Notes:
+Overall, I agree with what you wrote, the only thing is maybe expand on how the SQL lite server is being implemented and what resources/sites are being used 

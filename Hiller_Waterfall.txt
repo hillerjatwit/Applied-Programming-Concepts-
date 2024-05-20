@@ -6,8 +6,8 @@ Software can support a different variety of users.
 •	All users will be able to see and request to change their personal information and view schedules.
 o	Display weekly class schedule for user.
 o	Display personal information for users in table.
-o	All users will have a name, email address, gender, DoB, ID
-•	Students will be able to view, add and drop classes, requestion meetings with advisors, review their degree audit and required classes.
+o	All users will have a name, email address, ID
+•	Students will be able to view, add and drop classes, review their degree audit and required classes.
 o	Students will be able to see major, minor, and personal information when requested.
 o	Able to set up and adjust meetings with advisors and other faculty.
 o	Able to add and drop classes from their schedule.

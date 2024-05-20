@@ -7,8 +7,7 @@ Incremental
 
 
 Micah Rieley Notes:
-Overall, I agree with what you wrote, the only thing is maybe expand on how the SQL lite server is being implemented and what resources/sites are being used 
-
+I like what you wrote, the omly thing is i would expand on your writing and go a bit more in depth on what you want to achieve woth each part you add.
 Billy-
 Jared, I would recommend being more specific in your Incremental Development model. Instead of broadly saying "Users", I would instead 
 list what you want specific classes to be able to do in each version. I feel that this would help make what needs to be done for each class 

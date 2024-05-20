@@ -7,4 +7,4 @@ Integrate and Configure
 
 
 Micah Rieley Notes:
-Overall, I agree with what you wrote, the only thing is maybe expand on how the SQL lite server is being implemented and what resources/sites are being used 
+I really like what you wrote although i think integrating and utilizing selenium, Nunit, some of the other tools may be a but more in depth them what we need for this project but for a big/professional setting it would definetly be a good idea

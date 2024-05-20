@@ -52,6 +52,3 @@ After each stage is completed and tested for issues, the system is then released
 
 Jared Hiller Notes:
 How will these steps overlap with eachother, and how will each layer interact with eachother (UI to backend)
-
-Micah Rieley Notes:
-It may be a good idea to start with an idea of what you want, for example, writing down how you want different classes to act with each other. Which will then help with how each class will act with each other. If an outside user was following your process they may be a bit confused on how each one interacts with each other if they just followed stage 1. 

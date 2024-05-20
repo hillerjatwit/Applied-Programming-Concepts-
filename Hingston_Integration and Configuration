@@ -1,0 +1,11 @@
+Integration and Configuration
+In Assignment 3, we are given three tables to use. These tables are for Student, Instructor, and Admin. 
+The tables contain the same information we were planning to include into our tables. So, it would be beneficial 
+to integrate these precreated tables into our project.
+The assignment also contains some code that we could integrate. For example, code for creating a table.
+
+Last semester, I worked with objects and classes in my object oriented programming class. There are many old 
+labs and projects I have done that contain classes that could be integrated into the LeopardWeb Project.
+Doing this will be very useful because my memory of how to set up things like inheritance is somewhat foggy. 
+So, inheriting old code with a combination of some research to refresh exactly how it works will make the
+process move quicker when compared to relearning all our old techniques.

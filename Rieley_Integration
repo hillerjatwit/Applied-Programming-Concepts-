@@ -19,3 +19,5 @@ I would start by implementing how they created the database, although while doin
 For selecting, deleting, and adding, it is a similar case, we need to alter the code to make it so it would be usable with the data we would be adding or searching for. This will allow us to be able to use the functions for our needs such as searching for students by last name or WIT ID number, but also adding students with certain data, such as only first or last name but not having any classes yet. 
 
  
+Regis's Notes:
+You are missing details on how you would incorporate the admin class and cource table

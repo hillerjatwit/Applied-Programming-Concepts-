@@ -81,3 +81,6 @@ Operation and Maintenance
 Test as many functions as possible, and even try to break it, and let other people try and use it. This will help get as many different ways to test as possible as people will try and break the code in unique ways.  
 
  
+Billy- 
+Micah, I would suggest adding a few notes into your waterfall method. Especially under the Design for System section just to make 
+the what the functions can do and the restrictions on them more obvious. 

@@ -4,7 +4,7 @@ In op and maintenance, the testing process would not be done here, instead in im
 
 Incremental:
 - Fix the font to be more consistent
-- Otherwise good
+- A course CRN is missing from the incremental model
 
 Integration:
 - Fix model name type (you spelled it Intigration)

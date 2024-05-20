@@ -8,3 +8,8 @@ Incremental
 
 Micah Rieley Notes:
 I like how you added each section of the user as different versions, the only thing I would say is that it may complicate things by having a fully flushed out version of the student created and then create a full version of the professor and then the admin. It could complicate things as for some interactions, instead of creating simple interactions first and then making them more advanced, you’d just start by creating an advanced version which may make things a bit more difficult  
+
+Billy-
+Jared, I would recommend being more specific in your Incremental Development model. Instead of broadly saying "Users", I would instead 
+list what you want specific classes to be able to do in each version. I feel that this would help make what needs to be done for each class 
+more obvious.

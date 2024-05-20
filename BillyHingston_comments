@@ -1,6 +1,0 @@
-1. Micah, I would suggest adding a few notes into your waterfall method. Especially under the Design for System section just to make 
-the what the functions can do and the restrictions on them more obvious. 
-2. Micah, for your Incremental Development, I would suggest making the versions that you would want to create over time more clear. 
-3. Jared, I would recommend being more specific in your Incremental Development model. Instead of broadly saying "Users", I would instead 
-list what you want specific classes to be able to do in each version. I feel that this would help make what needs to be done for each class 
-more obvious.

@@ -1,0 +1,24 @@
+Integration and Configuration Timeline:
+Under this development model, we could take a wide range of routes. One is to start by integrating a more generalized tool and building most of the infrastructure from that. The other would be to look into a more complete system to integrate- one that has a database, and user system already set up. While the latter would likely be the quickest to configure and deploy, it would be the most expensive option. So instead, we will choose a more bare-bones system to integrate and configure.
+
+Stage 1 – Research:
+Stage 1 of this development model is a bit different from the first two. Here we would invest time in looking for the database model that would best suit our needs in terms of feature set and pricing. One popular option is Amazon Web Services (AWS), which offers an entire suite of tools to create both our database and user interface. This would be my option to use, as I have experience using this service to create and manage a database.
+Stage 2 - Integration and Configuration: 
+Database:
+With AWS, the tools to set up are readily available for use. Here the database and tables are created, and column names are specified according to the outlined requirements. AWS has two databases to choose from- dynamoDB and Timestream. As timestream is designed for time-based applications, we will choose dynamoDB for the school database. 
+UI:
+While we are already in the AWS ecosystem, a possible option to use is AWS Amplify, which offers a streamlined way to design and configure our UI. With this application our interface would be designed, and our user functions developed. This would follow the same schema as the waterfall timeline.
+Stage 3 - Deployment and feedback:
+With the database and UI configured, the next step is to deploy the system for use by the school. As part of AWS’s system, the process for setting up users is as simple as giving the administrator access to the framework of the system, where they can provide account details and add users to the system. Once the system is set up, we will be continuously monitoring user feedback and making any necessary fixes if they are discovered after release.
+Integration and Configuration Timeline:
+Under this development model, we could take a wide range of routes. One is to start by integrating a more generalized tool and building most of the infrastructure from that. The other would be to look into a more complete system to integrate- one that has a database, and user system already set up. While the latter would likely be the quickest to configure and deploy, it would be the most expensive option. So instead, we will choose a more bare-bones system to integrate and configure.
+
+Stage 1 – Research:
+Stage 1 of this development model is a bit different from the first two. Here we would invest time in looking for the database model that would best suit our needs in terms of feature set and pricing. One popular option is Amazon Web Services (AWS), which offers an entire suite of tools to create both our database and user interface. This would be my option to use, as I have experience using this service to create and manage a database.
+Stage 2 - Integration and Configuration: 
+Database:
+With AWS, the tools to set up are readily available for use. Here the database and tables are created, and column names are specified according to the outlined requirements. AWS has two databases to choose from- dynamoDB and Timestream. As timestream is designed for time-based applications, we will choose dynamoDB for the school database. 
+UI:
+While we are already in the AWS ecosystem, a possible option to use is AWS Amplify, which offers a streamlined way to design and configure our UI. With this application our interface would be designed, and our user functions developed. This would follow the same schema as the waterfall timeline.
+Stage 3 - Deployment and feedback:
+With the database and UI configured, the next step is to deploy the system for use by the school. As part of AWS’s system, the process for setting up users is as simple as giving the administrator access to the framework of the system, where they can provide account details and add users to the system. Once the system is set up, we will be continuously monitoring user feedback and making any necessary fixes if they are discovered after release.

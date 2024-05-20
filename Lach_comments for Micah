@@ -1,0 +1,11 @@
+Waterfall:
+Paragraph 1 - change "This means it will cost anything" to "This means it will NOT cost anything"
+In op and maintenance, the testing process would not be done here, instead in implementation and unit testing
+
+Incremental:
+- Fix the font to be more consistent
+- Otherwise good
+
+Integration:
+- Fix model name type (you spelled it Intigration)
+- An admin table is missing

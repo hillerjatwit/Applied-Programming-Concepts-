@@ -38,3 +38,6 @@ Let others use the system. Make note of any bugs and fix them.
 
 Micah Rieley Notes:
 I would expand a bit more on the Implementation and unit testing, the integration and system testing and the operation and maintenance section of the report. For example, instead of just sating integrate components and test them, maybe expand on how each user type may gave unique interactions with each other such as admins adding and removing courses which could affect the users or professors. 
+
+Regis's Notes:
+- A feature should be added to the student/course table - restrictions/prerequisites. This is to prevent the student from registering to classes that they are otherwise not eligible to do

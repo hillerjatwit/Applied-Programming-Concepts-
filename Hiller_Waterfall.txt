@@ -1,0 +1,29 @@
+Waterfall Model:
+Software Specification:
+Feasibility – This project is possible with the current technology available to us, including databases and user interfaces. The cost of this project is also within budget. 
+Requirements and Specifications: 
+Software can support a different variety of users.
+•	All users will be able to see and request to change their personal information and view schedules.
+o	Display weekly class schedule for user.
+o	Display personal information for users in table.
+o	All users will have a name, email address, gender, DoB, ID
+•	Students will be able to view, add and drop classes, requestion meetings with advisors, review their degree audit and required classes.
+o	Students will be able to see major, minor, and personal information when requested.
+o	Able to set up and adjust meetings with advisors and other faculty.
+o	Able to add and drop classes from their schedule.
+•	Professors will be able to view their class information and classlist, review and update job specific information and …
+o	Professors can view and update their class information.
+o	View a classlist for all the classes they are teaching.
+o	Review and update their job specific information.
+•	Admins will be able to update student and teacher databases, access testing accounts, and implement new updates to the system.
+Design:
+Users – Each type of user will have their own class with their respective parameters and functions. All users will have access to global functions which they will inherit from the base user class.
+Calendar – The software will have a calendar where users will be able to view their weekly class schedule and any meetings they have scheduled for that week.
+User Interface – The software will have a UI where the users will be able to navigate different tabs to get different information or update schedules, and 
+Database Design – The database will store all the user’s information including id, name, and user specific information like major or department.
+Validation – The software will have testing accounts available to the admins so they will be able to test all functionality and set up automated tests with the accounts to make sure there are no bugs. 
+
+Implementation:
+Write code, set up servers, create database, develop unit tests and automation. 
+Operations:
+Let users test the product and fix any bugs found and any security flaws. 

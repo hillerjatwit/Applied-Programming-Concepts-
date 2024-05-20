@@ -1,0 +1,4 @@
+Incremental 
+1.	Users should be able to request information regarding their schedules and personal information that comes from a SQL database.
+2.	Users should be able to request information through a UI, and schedule meetings with advisors and professors should be able to update their office hours and basic test should be implemented to reduce bugs.
+3.	Users should be able to use UI to add/drop and view their class schedules, updates meetings, and access the calendar.  Add/Drop should be prerequisites includes to prevent students taking classes not available to them. Testing should cover the whole software product and be automated using a testing framework. 

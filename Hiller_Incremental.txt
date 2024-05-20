@@ -2,3 +2,9 @@ Incremental
 1.	Users should be able to request information regarding their schedules and personal information that comes from a SQL database.
 2.	Users should be able to request information through a UI, and schedule meetings with advisors and professors should be able to update their office hours and basic test should be implemented to reduce bugs.
 3.	Users should be able to use UI to add/drop and view their class schedules, updates meetings, and access the calendar.  Add/Drop should be prerequisites includes to prevent students taking classes not available to them. Testing should cover the whole software product and be automated using a testing framework. 
+
+
+
+
+Micah Rieley Notes:
+I like how you added each section of the user as different versions, the only thing I would say is that it may complicate things by having a fully flushed out version of the student created and then create a full version of the professor and then the admin. It could complicate things as for some interactions, instead of creating simple interactions first and then making them more advanced, you’d just start by creating an advanced version which may make things a bit more difficult  

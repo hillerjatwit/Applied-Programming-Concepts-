@@ -18,3 +18,8 @@ add/remove students from a course, and search and print rosters and courses. Wit
 text based user interface can be finalized and tested. 
 
 The benefit of this model is that it allows for the creation of a simple initial version and new versions that add more complexity.
+
+
+
+Micah Rieley Notes:
+I would expand a bit more on the Implementation and unit testing, the integration and system testing and the operation and maintenance section of the report. For example, instead of just sating integrate components and test them, maybe expand on how each user type may gave unique interactions with each other such as admins adding and removing courses which could affect the users or professors. 

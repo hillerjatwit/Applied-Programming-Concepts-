@@ -10,3 +10,7 @@ UI:
 While we are already in the AWS ecosystem, a possible option to use is AWS Amplify, which offers a streamlined way to design and configure our UI. With this application our interface would be designed, and our user functions developed. This would follow the same schema as the waterfall timeline.
 Stage 3 - Deployment and feedback:
 With the database and UI configured, the next step is to deploy the system for use by the school. As part of AWS’s system, the process for setting up users is as simple as giving the administrator access to the framework of the system, where they can provide account details and add users to the system. Once the system is set up, we will be continuously monitoring user feedback and making any necessary fixes if they are discovered after release.
+
+
+Jared Hiller Notes:
+How are we going to test this, any ideas of testing frameworks we can use to test the UI, and do you wanna automates test or not.

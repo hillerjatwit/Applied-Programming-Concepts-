@@ -92,3 +92,6 @@ Billy-
 Micah, I would suggest adding a few notes into your waterfall method. Especially under the Design for System section just to make 
 the what the functions can do and the restrictions on them more obvious. 
 
+Hiller Comments:
+Need some more clarity on what some funtions we would like to use and how we would do so. Also would we be using command line or using a UI?
+

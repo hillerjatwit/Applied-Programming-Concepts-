@@ -12,7 +12,7 @@ Admin: add/remove users, add/remove courses’ and search and print rosters.
 
 A table to store the course catalogue and additional information. 
 
-Course name 
+Course name and CRN
 
 Course Details(ie. Times and how many are allowed to take it) 
 

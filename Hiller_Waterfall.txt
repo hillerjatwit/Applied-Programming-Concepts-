@@ -29,4 +29,4 @@ Operations:
 Let users test the product and fix any bugs found and any security flaws. 
 
 Micah Rieley Notes: 
-I would expand a bit more on the Implementation and unit testing, the integration and system testing and the operation and maintenance section of the report. For example, instead of just sating integrate components and test them, maybe expand on how each user type may gave unique interactions with each other such as admins adding and removing courses which could affect the users or professors. 
+I dont really have any comments for you, everything seems to be in depth and well thought out, well done

@@ -105,7 +105,7 @@ class Admin:
                     break
 
             if nextClass:
-                cursor.execute(f"""UPDATE STUDENT SET {nextClass} = ? WHERE ID = ?""", (ClassAdd, stuID))
+                cursor.execute(f"""UPDATE STUDENT SET {nextClass} = {ClassAdd} WHERE ID = {stuID}""")
                 database.commit()
                 print(f"Course {ClassAdd} added to {nextClass} for student ID {stuID}.")
             else:

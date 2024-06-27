@@ -5,11 +5,58 @@ database = sqlite3.connect("assignment5.db")
   
 # cursor objects are used to traverse, search, grab, etc. information from the database, similar to indices or pointers  
 cursor = database.cursor() 
+class User:
+    #def __init__(self, in_name):
+    #    self.sur_name = in_name
+    def search_all(self):
+        print("Entire course table")
+        cursor.execute("""SELECT * FROM COURSE""")
+        query_result = cursor.fetchall()
+        num_fields = len(cursor.description) #get the column names into a list
+        field_names = [i[0] for i in cursor.description]
+        for i in query_result:
+            print(i)	
+        
+    def print_course(self):
+        filter = int(input("\nEnter a coulumn to filter courses by\n1) CRN\n2) Title\n3) Department\n4) Time\n5) Day of the Week\n6) Semeseter\n7) Year\n8) Credits\n"))
+        filterval = str(input("\nEnter the value to filter: "))
+        match filter:
+            case 1:
+                filter = "CRN"
+            case 2:
+                filter = "TITLE"
+            case 3:
+                filter = "DEPARTMENT"
+            case 4:
+                filter = "TIME"
+            case 5:
+                filter = "DOW"
+            case 6: 
+                filter = "SEMESTER"
+            case 7:
+                filter = "YEAR"
+            case 8:
+                filter = "CREDITS"
+            case _:
+                filter = "CRN" #default to CRN if invalid input entered
+                print("Invalid input entered, defaulting to CRN\n")
 
-class Instructor:
+        print("Filtered course(s) based on " + str(filter))
+        cursor.execute(f"""SELECT * FROM COURSE WHERE {filter} = "{filterval}" """)
+        query_result = cursor.fetchall()
+        #num_fields = len(cursor.description) #get the column names into a list
+        #field_names = [i[0] for i in cursor.description]
+        for i in query_result:
+            print(i)	
+        
+class Student(User):
     def __init__(self, in_name):
         self.sur_name = in_name
+
+class Instructor(User):
+    def __init__(self, in_name):
         self.roster = []
+        self.sur_name = in_name
 
     def print_roster(self):
         crn = input("To see all students in the course, enter CRN of course: ")
@@ -41,10 +88,9 @@ class Instructor:
         # print
         for i in self.roster:
             print (i)
-class Admin:
+class Admin(User):
     def __init__(self, in_name):
         self.sur_name = in_name
-
     def add_course(self):
         addCRN = input("Enter the course CRN you want to add: ")
         cursor.execute(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
@@ -148,20 +194,33 @@ if stud != 0 or inst != 0 or adm != 0:
         if inst !=0:  # functions for instructor
             user_inst = Instructor(str(inst))
             print("1) Assemble and print course roster.")
-            select = int(input("Selct an option: "))
-            if select == 1:
-                user_inst.print_roster()
-            elif select == 0:
-                print("********** Goodbye! **********")
-            else:
-                print("Invalid Selection")
-        elif stud !=0:    # functions for student
+            print("5) Search all courses")
+            print("6) Search courses with a filter")
             select = int(input("Selct an option: "))
             if select == 0:
                 print("********** Goodbye! **********")
+            elif select == 1:
+                user_inst.print_roster()
+            elif select == 5:
+                user_inst.search_all()    
+            elif select == 6:
+                user_inst.print_course()   
             else:
                 print("Invalid Selection")
-        else:           # functions for admin
+        elif stud !=0:    # functions for student
+            user_stud = Student(str(stud))
+            print("5) Search all courses")
+            print("6) Search courses with a filter")
+            select = int(input("Selct an option: "))
+            if select == 0:
+                print("********** Goodbye! **********")
+            elif select == 5:
+                user_stud.search_all()    
+            elif select == 6:
+                user_stud.print_course()   
+            else:
+                print("Invalid Selection")
+        elif adm!=0:# functions for admin
            
            
             user_admin = Admin(str(adm))
@@ -169,17 +228,23 @@ if stud != 0 or inst != 0 or adm != 0:
             print("2) Remove a course")
             print("3) Add a course from a student")
             print("4) Remove a course from a student")
+            print("5) Search all courses")
+            print("6) Search courses with a filter")
             select = int(input("Selct an option: "))
-        if (select == 0):
-            print("********** Goodbye! **********")
-        elif select == 1:
-            user_admin.add_course()    
-        elif select == 2:
-            user_admin.remove_course()
-        elif select == 3:
-            user_admin.add_course_student()    
-        elif select == 4:
-            user_admin.remove_course_student()
+            if (select == 0):
+                print("********** Goodbye! **********")
+            elif select == 1:
+                user_admin.add_course()    
+            elif select == 2:
+                user_admin.remove_course()
+            elif select == 3:
+                user_admin.add_course_student()    
+            elif select == 4:
+                user_admin.remove_course_student()
+            elif select == 5:
+                user_admin.search_all()    
+            elif select == 6:
+                user_admin.print_course()
         else:
             print("Invalid Selection")
 else:

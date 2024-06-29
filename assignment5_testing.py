@@ -41,7 +41,7 @@ class User:
         for i in query_result:
             print(i)	
         
-    def print_course(self):#Regis
+    def filter_course(self):#Regis
         filter = int(input("\nEnter a coulumn to filter courses by\n1) CRN\n2) Title\n3) Department\n4) Time\n5) Day of the Week\n6) Semeseter\n7) Year\n8) Credits\n"))
         filterval = str(input("\nEnter the value to filter: "))
         match filter:
@@ -331,7 +331,7 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             elif select == 5:
                 user_inst.search_all()    
             elif select == 6:
-                user_inst.print_course()   
+                user_inst.filter_course()   
             else:
                 print("Invalid Selection")
         elif stud !=0:    # functions for student
@@ -344,7 +344,7 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             elif select == 5:
                 user_stud.search_all()    
             elif select == 6:
-                user_stud.print_course()   
+                user_stud.filter_course()   
             else:
                 print("Invalid Selection")
         elif adm!=0:# functions for admin
@@ -371,7 +371,7 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             elif select == 5:
                 user_admin.search_all()    
             elif select == 6:
-                user_admin.print_course()
+                user_admin.filter_course()
         else:
             print("Invalid Selection")
 else:

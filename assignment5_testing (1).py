@@ -199,7 +199,7 @@ class Admin(User):
     def add_course(self):       #Micah
         addCRN = input("Enter the course CRN you want to add: ")
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
-        if (results is not None):
+        if (results):
             addTitle= input("Enter the title: ")
             addDep= input("Enter the department: ")
             addTime= input("Enter the time: ")

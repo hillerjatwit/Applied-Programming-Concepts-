@@ -3,7 +3,7 @@ from datetime import datetime
 
 class dbConnection:
     
-    DatabaseURI="assignment3 (1).db"
+    DatabaseURI="assignment5.db"
     cur=None
     db=None
     
@@ -59,13 +59,13 @@ class User:
         
     #def __init__(self, in_name):
     #    self.sur_name = in_name
-    def search_all(self):#Regis - grabs all course information from the course table and prints to the user.
+    def search_all(self):
         print("Entire course table")
         query_result = self.conn.query("""SELECT * FROM COURSE""") 
         for i in query_result:
             print(i)	
         
-    def print_course(self): #Regis - grabs course information for courses that match the filters specified by the user. Currently accepts one filter.
+    def print_course(self):
         filter = int(input("\nEnter a coulumn to filter courses by\n1) CRN\n2) Title\n3) Department\n4) Time\n5) Day of the Week\n6) Semeseter\n7) Year\n8) Credits\n"))
         filterval = str(input("\nEnter the value to filter: "))
         match filter:
@@ -182,9 +182,9 @@ class Instructor(User):
                 for i in self.roster:
                     print (i)
                     
-    def SearchCourseRoster(self):
-        #IDK what this is supposed to do
-        return True
+    # def SearchCourseRoster(self):
+    #     #IDK what this is supposed to do
+    #     return True
        
 class Admin(User):
     
@@ -232,8 +232,9 @@ class Admin(User):
     def add_course_student(self):               #Micah
         stuID=input("Please enter a students ID: ")
         ClassAdd=input("Enter the course CRN you want to add: ")
-        results = self.conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
-        if results:
+        cursor.execute(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
+        results=cursor.fetchone()
+        if results is not None:
             classes = ['CLASS1', 'CLASS2', 'CLASS3', 'CLASS4', 'CLASS5']
             nextClass = None
 
@@ -298,13 +299,11 @@ class Admin(User):
 
 #Testing Code
 
-DatabaseURI="assignment3 (1).db"
-db = sqlite3(DatabaseURI)
+DatabaseURI="assignment5.db"
+db = sqlite3.connect(DatabaseURI)
 cursor = db.cursor()
 
 
-user = Student("Jared")
-user.print_course()
 
 
 

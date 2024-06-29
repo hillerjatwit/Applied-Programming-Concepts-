@@ -1,9 +1,10 @@
 import sqlite3
 from datetime import datetime
 
+#Jared
 class dbConnection:
     
-    DatabaseURI="assignment3 (1).db"
+    DatabaseURI="assignment5.db"
     cur=None
     db=None
     
@@ -30,42 +31,17 @@ class User:
     
     #SQL Database Access Objects
     conn = dbConnection()
-
-    def login(self):
-        Email = input("Enter your Email")
-        password = input("Enter your Passsword")
-        query = "SELECT * FROM USERS WHERE Email = '" + Email + "' AND Password = '" + password +"'"
-        results = self.conn.query(query)
-        if (results is not None):
-            self.Email = Email
-            query = "SELECT Name FROM USERS WHERE Email = '" + Email + "' AND Password = '" + password +"'"
-            self.name = self.conn.query(query)
-            query = "SELECT Surname FROM USERS WHERE Email = '" + Email + "' AND Password = '" + password +"'"
-            self.Surname = self.conn.query(query)
-            query = "SELECT ID FROM USERS WHERE Email = '" + Email + "' AND Password = '" + password +"'"
-            self.ID = self.conn.query(query)
-        else :
-            print("Invalid Credentials")
-            
-            
-    def logout(self):
-        #Add GUI logic to return to login page
-        
-        #Set Attributes back to none
-        Email=None
-        Name=None
-        Surname=None
-        ID=None
-        
+           
+    
     #def __init__(self, in_name):
     #    self.sur_name = in_name
-    def search_all(self):
+    def search_all(self): #Regis
         print("Entire course table")
         query_result = self.conn.query("""SELECT * FROM COURSE""") 
         for i in query_result:
             print(i)	
         
-    def print_course(self):
+    def print_course(self):#Regis
         filter = int(input("\nEnter a coulumn to filter courses by\n1) CRN\n2) Title\n3) Department\n4) Time\n5) Day of the Week\n6) Semeseter\n7) Year\n8) Credits\n"))
         filterval = str(input("\nEnter the value to filter: "))
         match filter:
@@ -90,7 +66,7 @@ class User:
                 print("Invalid input entered, defaulting to CRN\n")
 
         print("Filtered course(s) based on " + str(filter))
-        query_result = self.conn.query(f"""SELECT * FROM COURSE WHERE {filter} = "{filterval}" """)
+        query_result = self.conn.query(f"SELECT * FROM COURSE WHERE {filter} = {filterval}")
         for i in query_result:
             print(i)	
         
@@ -106,30 +82,34 @@ class Student(User):
     
     def __init__(self, in_name):
         self.sur_name = in_name
-        
+
+    #Jared
     def addCourse(self, CRN):
-        #Check if CRN exists
-        results = self.conn.query("SELECT * FROM COURSES WHERE CRN = " + CRN + "'")
+         #Check if CRN exists
+        CRN = input("Enter the CRN of the class you wish to add")
+        
+        results = self.conn.query(f"SELECT * FROM COURSE WHERE CRN = '{CRN}'")
         if (results is not None):
             #Need logic to check if credits match
-            
-            #update Query once we have registeredCourses Column
-            self.conn.query("UPDATE STUDENTS SET REGISTERDCOURSES = '" + CRN + "' WHERE EMAIL = '" + self.Email+ "'")
-   
-        else :
-            print("Courses you want to add does not exist")
-            
+            row =  list(self.conn.query(f"SELECT CLASS1, CLASS2, CLASS3, CLASS4, CLASS5 FROM STUDENT WHERE ID = '{self.ID}'"))
+            for i in range(5):
+                if row[0][i] is None:
+                    self.conn.queryExecute(f"UPDATE STUDENT SET CLASS{i+1} = '{CRN}' WHERE ID = '{self.ID}'")
+                    print("Class has been updated")
+                    break
+
+    #Jared
     def removeCourse(self, CRN):
         #Check if CRN exists
-        results = self.conn.query("SELECT * FROM COURSES WHERE CRN = " + CRN + "'")
+        CRN = input("Enter the CRN of the class you wish to add")
+        
+        results = self.conn.query(f"SELECT * FROM COURSE WHERE CRN = '{CRN}'")
         if (results is not None):
             #Need logic to check if credits match
-            
-            #update Query once we have registeredCourses Column
-            self.conn.query("UPDATE STUDENTS SET REGISTERDCOURSES = '" + CRN + "' WHERE EMAIL = '" + self.Email+ "'")
-   
-        else :
-            print("Courses you want to add does not exist")
+            row =  list(self.conn.query(f"SELECT CLASS1, CLASS2, CLASS3, CLASS4, CLASS5 FROM STUDENT WHERE ID = '{self.ID}'"))
+            for i in range(5):
+                if row[0][i] == CRN:
+                    self.conn.queryExecute(f"UPDATE STUDENT SET CLASS{i+1} = 'NONE' WHERE ID = '{self.ID}'")
             
     def checkConflict(self):
         results = self.conn.query("SELECT REGISTEREDCOURSES FROM STUDENTS WHERE EMAIL = '" + self.Email+ "'")
@@ -182,19 +162,19 @@ class Instructor(User):
                 for i in self.roster:
                     print (i)
                     
-    def SearchCourseRoster(self):
-        #IDK what this is supposed to do
-        return True
+    # def SearchCourseRoster(self):
+    #     #IDK what this is supposed to do
+    #     return True
        
 class Admin(User):
     
     def __init__(self, in_name):
         self.sur_name = in_name
         
-    def add_course(self):
+    def add_course(self):       #Micah
         addCRN = input("Enter the course CRN you want to add: ")
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
-        if (results is not None):
+        if (len(results)==0):
             addTitle= input("Enter the title: ")
             addDep= input("Enter the department: ")
             addTime= input("Enter the time: ")
@@ -206,16 +186,16 @@ class Admin(User):
         else:
             print("Course already has that CRN")
 
-    def remove_course(self):
+    def remove_course(self):        #Micah
         removeCRN= input("Enter the course CRN you want to remove: ")
         
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {removeCRN} """)
-        if results is None:
+        if (len(results)==0):
             print("A course with that CRN does not exist")
         else:
             self.conn.queryExecute(f"""DELETE FROM COURSE WHERE CRN = {removeCRN}""")
             
-    def remove_course_student(self):
+    def remove_course_student(self):            #Micah
         stuID=input("Please enter a students ID: ")
         results = self.conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
         
@@ -229,16 +209,17 @@ class Admin(User):
         self.conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = {removeclass} AND ID = {stuID}")
         self.conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = {removeclass} AND ID = {stuID}")
 
-    def add_course_student(self):
+    def add_course_student(self):               #Micah
         stuID=input("Please enter a students ID: ")
         ClassAdd=input("Enter the course CRN you want to add: ")
-        results = self.conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
+        cursor.execute(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
+        results=cursor.fetchone()
         if results is not None:
             classes = ['CLASS1', 'CLASS2', 'CLASS3', 'CLASS4', 'CLASS5']
             nextClass = None
 
-            for i in range(len(query_result)):
-                if query_result[i] is None:
+            for i in range(len(results)):
+                if results[i] is None:
                     nextClass = classes[i]
                     break
 
@@ -249,6 +230,8 @@ class Admin(User):
                 print("No available slot to add the new class.")
         else:
             print(f"No student found with ID {stuID}.")
+            
+            #Jared
     def addStudent(self):
         id = input("Please Enter new student ID")
         name = input("Enter Name")
@@ -259,6 +242,7 @@ class Admin(User):
         major = input("Please enter major")
         self.conn.queryExecute(f"INSERT INTO STUDENT ({id}, {name}, {surname}, {gradYear}, {major}, {email})")
 
+    #Jared
     def removeStudent(self):
         id = input("Please Enter id of Student you wish to remove")
         result  = self.conn.query(f"SELECT * FROM STUDENT WHERE ID = {id}")
@@ -266,7 +250,8 @@ class Admin(User):
             self.conn.queryExecute(f"DELETE FROM STUDENT WHERE ID = {id}")
         else :
             print("This student is not within the database")
-            
+
+    #Jared
     def addInstructor(self):
         id = input("Please Enter new instrutor ID")
         name = input("Enter Name")
@@ -279,7 +264,8 @@ class Admin(User):
         major = input("Please enter major")
         self.conn.queryExecute(f"INSERT INTO STUDENT ({id}, {name}, {surname}, {title}, {major}, {hireYear}, {dept}, {email})")
 
-    def removeStudent(self):
+    #Jared
+    def removeInstructor(self):
         id = input("Please Enter id of Instrutor you wish to remove")
         result  = self.conn.query(f"SELECT * FROM INSTRUTOR WHERE ID = {id}")
         if result is not None:
@@ -298,16 +284,9 @@ class Admin(User):
 
 #Testing Code
 
-DatabaseURI="assignment3 (1).db"
-db = sqlite3(DatabaseURI)
+DatabaseURI="assignment5.db"
+db = sqlite3.connect(DatabaseURI)
 cursor = db.cursor()
-
-
-user = Student("Jared")
-user.print_course()
-
-
-
 
 stud = 0
 inst = 0

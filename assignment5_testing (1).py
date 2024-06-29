@@ -199,7 +199,7 @@ class Admin(User):
     def add_course(self):       #Micah
         addCRN = input("Enter the course CRN you want to add: ")
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
-        if (results):
+        if (len(results)==0):
             addTitle= input("Enter the title: ")
             addDep= input("Enter the department: ")
             addTime= input("Enter the time: ")
@@ -215,7 +215,7 @@ class Admin(User):
         removeCRN= input("Enter the course CRN you want to remove: ")
         
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {removeCRN} """)
-        if results is None:
+        if (len(results)==0):
             print("A course with that CRN does not exist")
         else:
             self.conn.queryExecute(f"""DELETE FROM COURSE WHERE CRN = {removeCRN}""")

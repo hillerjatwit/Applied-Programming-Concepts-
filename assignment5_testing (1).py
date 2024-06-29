@@ -59,13 +59,13 @@ class User:
         
     #def __init__(self, in_name):
     #    self.sur_name = in_name
-    def search_all(self):
+    def search_all(self):#Regis - grabs all course information from the course table and prints to the user.
         print("Entire course table")
         query_result = self.conn.query("""SELECT * FROM COURSE""") 
         for i in query_result:
             print(i)	
         
-    def print_course(self):
+    def print_course(self): #Regis - grabs course information for courses that match the filters specified by the user. Currently accepts one filter.
         filter = int(input("\nEnter a coulumn to filter courses by\n1) CRN\n2) Title\n3) Department\n4) Time\n5) Day of the Week\n6) Semeseter\n7) Year\n8) Credits\n"))
         filterval = str(input("\nEnter the value to filter: "))
         match filter:

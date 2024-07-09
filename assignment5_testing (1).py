@@ -358,7 +358,7 @@ stud = 0
 inst = 0
 adm = 0
 
-##UNIT TEST SHIT HERE
+##UNIT TEST SHIT HERE       run "pip install keyboard" in terminla
     
 f=open("Test.txt","r")
 mockinput=f.readlines()
@@ -373,25 +373,26 @@ keyboard.write(mockinput[0])
 passw = input("Enter your password: ")
 
 print (f"Password Entered: {mockinput[0]}")
+
 #STUDENT
 cursor.execute("""SELECT NAME from STUDENT where PASSWORD = (SELECT PASSWORD From STUDENT where PASSWORD = '%s'  )""" % (passw))
 query_result = cursor.fetchall()
 for i in query_result:                          #Billy Hingston
-    print("Welcome Student " + str(i))
+    print("Welcome Student " + str(i)[0])
     stud = i
 
 # INSTRUCTOR
 cursor.execute("""SELECT SURNAME from INSTRUCTOR where PASSWORD = (SELECT PASSWORD From INSTRUCTOR where PASSWORD = '%s'  )""" % (passw))
 query_result = cursor.fetchall()
 for i in query_result:                          #Billy Hingston
-    print("Welcome Instructor " + str(i))
+    print("Welcome Instructor " + str(i)[0])
     inst = i
 
 # ADMIN
 cursor.execute("""SELECT SURNAME from ADMIN where PASSWORD = (SELECT PASSWORD From ADMIN where PASSWORD = '%s'  )""" % (passw))
 query_result = cursor.fetchall()
 for i in query_result:                          #Billy Hingston
-    print("Welcome Admin " + str(i))
+    print("Welcome Admin " + str(i)[0])
     adm = i
 
 select = 1

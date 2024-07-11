@@ -116,7 +116,7 @@ class User:
                 print("Invalid input entered, defaulting to CRN\n")
 
         print("Filtered course(s) based on " + str(filter))
-        query_result = self.conn.query(f"SELECT * FROM COURSE WHERE {filter} = {filterval}")
+        query_result = self.conn.query(f"SELECT * FROM COURSE WHERE {filter} = '{filterval}'")
         for i in query_result:
             print(i)	
         
@@ -227,7 +227,8 @@ class Admin(User):
         
         
         if (len(results)==0):
-            testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
+          #  testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
+
             def test():
                 addTitle = input("Enter the title: ")
                 addDep = input("Enter the department: ")
@@ -239,9 +240,10 @@ class Admin(User):
                 
                 self.conn.queryExecute(f"""INSERT INTO COURSE VALUES({addCRN}, '{addTitle}','{addDep}', {addTime}, '{addDOW}', '{addSem}', {addYear}, {addCred})""") 
             # Patch the input function with a side effect to return the test inputs sequentially
-            with patch('builtins.input', side_effect=testinputs):
+            #     with patch('builtins.input', side_effect=testinputs):
                 # Call the function that uses the inputs
-                test()  
+            test()  
+
         else:
             print("Course already has that CRN")
             
@@ -354,12 +356,21 @@ inst = 0
 adm = 0
 
 ## ---------------- UNIT TEST HERE  ----------------------
-f=open("student_login.txt","r")
+f=open("AdminSearchFilterString.txt","r")
 mockinput=f.readlines()
 
 login = mockinput[0]
 selection = mockinput[1]
 crninert = mockinput[2]
+# moretestvar = mockinput[3]
+# moretestvar2 = mockinput[4]
+# moretestvar3 = mockinput[5]
+# moretestvar4 = mockinput[6]
+# moretestvar5 = mockinput[7]
+# moretestvar6 = mockinput[8]
+# moretestvar7 = mockinput[9]
+# moretestvar8 = mockinput[10]
+        
         
 time.sleep(1)
 keyboard.write(mockinput[0])
@@ -393,7 +404,18 @@ select = 1
 
 keyboard.write(mockinput[1])
 keyboard.write(mockinput[2])
-keyboard.press_and_release("enter")
+keyboard.write(mockinput[3])
+keyboard.write(mockinput[4])
+keyboard.write(mockinput[5])
+keyboard.write(mockinput[6])
+keyboard.write(mockinput[7])
+keyboard.write(mockinput[8])
+keyboard.write(mockinput[9])
+keyboard.write(mockinput[10])
+
+
+
+#keyboard.press_and_release("enter")
 if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
     while select != 0: #Billy Hingston (log out)
         print("-----------------------------\n0) Exit")

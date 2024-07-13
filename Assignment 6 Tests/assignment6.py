@@ -46,9 +46,9 @@ class Tests(unittest.TestCase):
 #     unittest.main(verbosity=2)
 
 ## ---------------- UNIT TEST HERE  ----------------------
-testactive = 1 #Regis - Only run assert if test is set to 1
+testactive = 1 #Regis - Only run test cases if test is set to 1
 if testactive:
-    with open("student_search_filter_int.txt","r") as f:#AdminSearchFilterString
+    with open("student_search_filter_int.txt","r") as f:#change the name of text file to change test case
         testlist = f.read().splitlines()
     #testcase=f.readlines()
     testcase = testlist[0:18] 

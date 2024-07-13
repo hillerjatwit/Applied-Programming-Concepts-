@@ -1,7 +1,5 @@
-hello2
-4
-10003
-3225
+1pass2
+5
 0
 
 
@@ -17,7 +15,9 @@ hello2
 
 
 
-Rubin
+
+
+Fourier
 
 
 

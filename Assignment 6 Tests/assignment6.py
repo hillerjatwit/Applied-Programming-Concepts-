@@ -14,7 +14,7 @@ class dbConnection:
     db=None
     
     def __init__(self):
-        self.db = sqlite3.connect(self.DatabaseURI);
+        self.db = sqlite3.connect(self.DatabaseURI)
         self.cur = self.db.cursor()
         
     def query(self, query):
@@ -45,6 +45,25 @@ class Tests(unittest.TestCase):
 # if __name__ == '__main__':
 #     unittest.main(verbosity=2)
 
+## ---------------- UNIT TEST HERE  ----------------------
+testactive = 1 #Regis - Only run assert if test is set to 1
+if testactive:
+    with open("student_search_filter_int.txt","r") as f:#AdminSearchFilterString
+        testlist = f.read().splitlines()
+    #testcase=f.readlines()
+    testcase = testlist[0:18] 
+    login = testcase[0]
+    selection = testcase[1]
+    crninert = testcase[2]
+    # moretestvar = testcase[3]
+    # moretestvar2 = testcase[4]
+    # moretestvar3 = testcase[5]
+    # moretestvar4 = testcase[6]
+    # moretestvar5 = testcase[7]
+    # moretestvar6 = testcase[8]
+    # moretestvar7 = testcase[9]
+    # moretestvar8 = testcase[10]
+    testassert = testlist[19:] #values to compare with
 
 class User:
 
@@ -91,7 +110,7 @@ class User:
         for i in query_result:
             print(i)	
         
-    def print_course(self):#Regis
+    def search_filter(self):#Regis
         filter = int(input("\nEnter a coulumn to filter courses by\n1) CRN\n2) Title\n3) Department\n4) Time\n5) Day of the Week\n6) Semeseter\n7) Year\n8) Credits\n"))
         filterval = str(input("\nEnter the value to filter: "))
         match filter:
@@ -118,8 +137,11 @@ class User:
         print("Filtered course(s) based on " + str(filter))
         query_result = self.conn.query(f"SELECT * FROM COURSE WHERE {filter} = '{filterval}'")
         for i in query_result:
-            print(i)	
-        
+            print(i)
+            if testactive:
+                for count, j in enumerate(i):
+                    assert str(i[count]) == str(testassert[count + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+                    print('✔ Test Passed!')       
 class Student(User):
     
     GradYear=None
@@ -207,9 +229,13 @@ class Instructor(User):
         for i in query_result:
             app = i
             self.roster.append(app)
+        namecount = 0
         for i in self.roster:
             print (i)
-                    
+            if testactive:
+                    assert str(i[0]) == str(testassert[namecount + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+                    print('✔ Test Passed!') 
+                    namecount += 1        
     # def SearchCourseRoster(self):
     #     #IDK what this is supposed to do
     #     return True
@@ -222,10 +248,6 @@ class Admin(User):
     def add_course(self):       #Micah
         addCRN = input("Enter the course CRN you want to add: ")
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
-        
-    
-        
-        
         if (len(results)==0):
           #  testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
 
@@ -242,6 +264,14 @@ class Admin(User):
             # Patch the input function with a side effect to return the test inputs sequentially
             #     with patch('builtins.input', side_effect=testinputs):
                 # Call the function that uses the inputs
+                if testactive:
+                    query_result = self.conn.query(f"""SELECT * FROM COURSE WHERE CRN = {addCRN}""") 
+                    for i in query_result:
+                        print(i)
+                        if testactive:
+                            for count, j in enumerate(i):
+                                assert str(i[count]) == str(testassert[count + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+                                print('✔ Test Passed!')     
             test()  
 
         else:
@@ -288,6 +318,12 @@ class Admin(User):
             if nextClass:
                 self.conn.queryExecute(f"""UPDATE STUDENT SET {nextClass} = {ClassAdd} WHERE ID = {stuID}""")
                 print(f"Course {ClassAdd} added to {nextClass} for student ID {stuID}.")
+                if testactive:
+                    query_result = self.conn.query(f"""SELECT {nextClass} FROM STUDENT WHERE ID = {stuID}""")
+                    for i in query_result:
+                        for count, j in enumerate(i):
+                            assert str(i[count]) == str(testassert[count + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+                            print('✔ Test Passed!')    
             else:
                 print("No available slot to add the new class.")
         else:
@@ -355,70 +391,59 @@ stud = 0
 inst = 0
 adm = 0
 
-## ---------------- UNIT TEST HERE  ----------------------
-f=open("AdminSearchFilterString.txt","r")
-mockinput=f.readlines()
-
-login = mockinput[0]
-selection = mockinput[1]
-crninert = mockinput[2]
-# moretestvar = mockinput[3]
-# moretestvar2 = mockinput[4]
-# moretestvar3 = mockinput[5]
-# moretestvar4 = mockinput[6]
-# moretestvar5 = mockinput[7]
-# moretestvar6 = mockinput[8]
-# moretestvar7 = mockinput[9]
-# moretestvar8 = mockinput[10]
-        
-        
-time.sleep(1)
-keyboard.write(mockinput[0])
+if testactive ==1:
+        #begin unit test
+    time.sleep(1)
+    keyboard.write(testcase[0])
+    keyboard.press('enter')
+    print (f"Password Entered: {testcase[0]}")
+    ## ---------------- UNIT TEST HERE  ----------------------
 passw = input("Enter your password: ")
-
-print (f"Password Entered: {mockinput[0]}")
-## ---------------- UNIT TEST HERE  ----------------------
 
 #STUDENT
 cursor.execute("""SELECT NAME from STUDENT where PASSWORD = (SELECT PASSWORD From STUDENT where PASSWORD = '%s'  )""" % (passw))
 query_result = cursor.fetchall()
 for i in query_result:                          #Billy Hingston
-    print("Welcome Student " + str(i))
+    print("Welcome Student " + str(i[0]))
+    if testactive:
+        for count, j in enumerate(i):
+            assert str(i[count]) == str(testassert[count]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+            print('✔ Test Passed!') 
     stud = i
 
 # INSTRUCTOR
 cursor.execute("""SELECT SURNAME from INSTRUCTOR where PASSWORD = (SELECT PASSWORD From INSTRUCTOR where PASSWORD = '%s'  )""" % (passw))
 query_result = cursor.fetchall()
 for i in query_result:                          #Billy Hingston
-    print("Welcome Instructor " + str(i))
+    print("Welcome Instructor " + str(i[0]))
     inst = i
+    if testactive:
+        for count, j in enumerate(i):
+            assert str(i[count]) == str(testassert[count]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+            print('✔ Test Passed!') 
 
 # ADMIN
 cursor.execute("""SELECT SURNAME from ADMIN where PASSWORD = (SELECT PASSWORD From ADMIN where PASSWORD = '%s'  )""" % (passw))
 query_result = cursor.fetchall()
 for i in query_result:                          #Billy Hingston
-    print("Welcome Admin " + str(i))
+    print("Welcome Admin " + str(i[0]))
+    if testactive:
+        for count, j in enumerate(i):
+            assert str(i[count]) == str(testassert[count]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+            print('✔ Test Passed!') 
     adm = i
 
 select = 1
 
-keyboard.write(mockinput[1])
-keyboard.write(mockinput[2])
-keyboard.write(mockinput[3])
-keyboard.write(mockinput[4])
-keyboard.write(mockinput[5])
-keyboard.write(mockinput[6])
-keyboard.write(mockinput[7])
-keyboard.write(mockinput[8])
-keyboard.write(mockinput[9])
-keyboard.write(mockinput[10])
-
-
+if testactive:
+    for i in range(len(testcase))[1:]:
+        keyboard.write(testcase[i])
+        keyboard.press('enter')
 
 #keyboard.press_and_release("enter")
 if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
     while select != 0: #Billy Hingston (log out)
-        print("-----------------------------\n0) Exit")
+        print("-----------------------------\n0) Logout")
         if inst !=0:  # functions for instructor
             user_inst = Instructor(str(inst))
             print("1) Assemble and print course roster.")
@@ -432,7 +457,7 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             elif select == 5:
                 user_inst.search_all()    
             elif select == 6:
-                user_inst.print_course()   
+                user_inst.search_filter()   
             else:
                 print("Invalid Selection")
         elif stud !=0:    # functions for student
@@ -446,7 +471,7 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             elif select == 5:
                 user_stud.search_all()    
             elif select == 6:
-                user_stud.print_course()   
+                user_stud.search_filter()   
             else:
                 print("Invalid Selection")
         elif adm!=0:# functions for admin
@@ -473,7 +498,7 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             elif select == 5:
                 user_admin.search_all()    
             elif select == 6:
-                user_admin.print_course()
+                user_admin.search_filter()
         else:
             print("Invalid Selection")
 else:

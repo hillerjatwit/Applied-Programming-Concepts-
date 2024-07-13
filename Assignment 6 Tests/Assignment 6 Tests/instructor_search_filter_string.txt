@@ -1,0 +1,38 @@
+hello2
+6
+6
+Summer
+0
+
+
+
+
+
+
+
+
+
+
+
+
+
+assert values begin line 20:
+Rubin
+3225
+Applied Programming Concepts
+BSCO
+8
+TRTH
+Summer
+2024
+4
+3229
+BSME Class
+BSME
+15
+TRF
+Summer
+2024
+3
+
+

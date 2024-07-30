@@ -14,6 +14,7 @@ class dbConnection:
     db=None
     
     def __init__(self):
+
         self.db = sqlite3.connect(self.DatabaseURI)
         self.cur = self.db.cursor()
         
@@ -46,16 +47,23 @@ class Tests(unittest.TestCase):
 #     unittest.main(verbosity=2)
 
 ## ---------------- UNIT TEST HERE  ----------------------
-testactive = 0 #Regis - Only run test cases if test is set to 1
+testactive = 0 #Regis - Only run assert if test is set to 1
 if testactive:
-    with open("student_search_filter_int.txt","r") as f:#change the name of text file to change test case
+    with open("student_search_filter_int.txt","r") as f:#AdminSearchFilterString
         testlist = f.read().splitlines()
     #testcase=f.readlines()
     testcase = testlist[0:18] 
     login = testcase[0]
     selection = testcase[1]
     crninert = testcase[2]
-
+    # moretestvar = testcase[3]
+    # moretestvar2 = testcase[4]
+    # moretestvar3 = testcase[5]
+    # moretestvar4 = testcase[6]
+    # moretestvar5 = testcase[7]
+    # moretestvar6 = testcase[8]
+    # moretestvar7 = testcase[9]
+    # moretestvar8 = testcase[10]
     testassert = testlist[19:] #values to compare with
 
 class User:
@@ -200,7 +208,7 @@ class Instructor(User):
         self.roster = []    
         self.sur_name = in_name
 
-    def print_roster(self):     #Billy Hingston
+    def print_search_roster(self):     #Billy Hingston
         crn = input("To see all students in the course, enter CRN of course: ")
         query_result = self.conn.query("SELECT NAME from STUDENT where CLASS1 =  '" + crn + "'")
         for i in query_result:
@@ -224,14 +232,32 @@ class Instructor(User):
             self.roster.append(app)
         namecount = 0
         for i in self.roster:
-            print (i)
+            print (i[0])
             if testactive:
                     assert str(i[0]) == str(testassert[namecount + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
                     print('✔ Test Passed!') 
-                    namecount += 1        
-    # def SearchCourseRoster(self):
-    #     #IDK what this is supposed to do
-    #     return True
+                    namecount += 1      
+        search = input("If you would like to search for a specific student, press 1. Otherwise, press 0 to return to the main menu: ") #Regis
+        if search == '1':
+            student_found = 0
+            get_student = input("Please enter the first name of the student you want to search for: ")
+            for i in self.roster:
+                if i[0] == get_student:
+                    student_found = 1
+                    print(i[0])
+            if student_found == 0:
+                print("Student not found!")
+
+   # def SearchCourseRoster(self):
+   #    #functionality merged into print_search_roster        
+   #   return True
+
+    def print_teaching(self): #Regis
+        inst_dept = self.conn.query(f"""SELECT DEPT FROM INSTRUCTOR WHERE ID = {self.ID} """)
+        query_result = self.conn.query(f"""SELECT * FROM COURSE WHERE DEPARTMENT = '{inst_dept[0][0]}'""")
+        print('Displayed below is your teaching schedule: ')
+        for i in query_result:
+            print(i)
        
 class Admin(User):
     
@@ -242,8 +268,6 @@ class Admin(User):
         addCRN = input("Enter the course CRN you want to add: ")
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
         if (len(results)==0):
-          #  testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
-
             def test():
                 addTitle = input("Enter the title: ")
                 addDep = input("Enter the department: ")
@@ -323,85 +347,42 @@ class Admin(User):
             print(f"No student found with ID {stuID}.")
             #Jared
     def addStudent(self):
-        highest=0
-        #Logic to make ID sequential
-        existing_id= self.conn.query(f"SELECT * FROM STUDENT")
-        for i in range(len(existing_id)):
-            if int(existing_id[i][0]) > highest:
-                highest = int(existing_id[i][0])
-        id = highest+1
-        
-        name = input("Enter Name: ")
-        surname = input("Enter surname: ")
-        email = surname + name[0]
-        tempemail=email
-        #logic to check that email is still available from both student and instructors emails
-        existing_id= self.conn.query("SELECT * FROM STUDENT ")
-        existing_id = existing_id + self.conn.query(" SELECT * FROM INSTRUCTOR")
-        for i in range(len(existing_id)):
-            if existing_id[i][5] == tempemail:
-                if not str(existing_id[i][5][-1]).isdigit():
-                    tempemail = email+"1"
-                else:
-                    new_val= int(existing_id[i][5][-1])+1
-                    tempemail = f"{email}{new_val}"
-        email= tempemail
-
+        id = input("Please Enter new student ID")
+        name = input("Enter Name")
+        surname = input("Enter surname")
+        email = surname + name[0] + "@wit.edu"
+        #logic to check that email is still available
         gradYear = datetime.now().year + 4
-        major = input("Please enter major: ")
-        password= input("Please enter a password: ")
-        self.conn.queryExecute(f"INSERT INTO STUDENT VALUES('{id}', '{name}', '{surname}', '{gradYear}', '{major}', '{email}','{password}',NULL,NULL,NULL,NULL,NULL)")
-        
+        major = input("Please enter major")
+        self.conn.queryExecute(f"INSERT INTO STUDENT ({id}, {name}, {surname}, {gradYear}, {major}, {email})")
+
     #Jared
     def removeStudent(self):
         id = input("Please Enter id of Student you wish to remove")
         result  = self.conn.query(f"SELECT * FROM STUDENT WHERE ID = {id}")
-        if not len(result)==0:
+        if result is not None:
             self.conn.queryExecute(f"DELETE FROM STUDENT WHERE ID = {id}")
         else :
             print("This student is not within the database")
 
     #Jared
     def addInstructor(self):
-        highest = 0
-        #Logic for sequential ID
-        existing_id= self.conn.query(f"SELECT * FROM INSTRUCTOR")
-        for i in range(len(existing_id)):
-            if int(existing_id[i][0]) > highest:
-                highest = int(existing_id[i][0])
-        id = highest+1  
-
-        name = input("Enter Name: ")
-        surname = input("Enter surname: ")
-        email = surname + name[0]
-        tempemail=email
-
-        #logic to check that email is still available from both student and instructors emails
-        existing_id= self.conn.query("SELECT * FROM STUDENT ")
-        existing_id = existing_id + self.conn.query(" SELECT * FROM INSTRUCTOR")
-
-        for i in range(len(existing_id)):
-            if existing_id[i][5] == tempemail:
-                if not str(existing_id[i][5][-1]).isdigit():
-                    tempemail = email+"1"
-                else:   
-                    new_val= int(existing_id[i][5][-1])+1
-                    tempemail = f"{email}{new_val}"
-        email= tempemail
-
-        title = input("Enter Instrutor's title: ")
-        dept = input("Enter instrutor's Department: ")
-        password = input("Enter instrutor's password: ")
-
+        id = input("Please Enter new instrutor ID")
+        name = input("Enter Name")
+        surname = input("Enter surname")
+        email = surname + name[0] + "@wit.edu"
+        title = input("Enter Instrutor's title")
+        dept = input("Enter instrutor's Department")
         #logic to check that email is still available
         hireYear = datetime.now().year
-        self.conn.queryExecute(f"INSERT INTO INSTRUCTOR VALUES('{id}', '{name}', '{surname}', '{title}',  '{hireYear}', '{email}','{password}','{dept}')")
+        major = input("Please enter major")
+        self.conn.queryExecute(f"INSERT INTO STUDENT ({id}, {name}, {surname}, {title}, {major}, {hireYear}, {dept}, {email})")
 
     #Jared
     def removeInstructor(self):
         id = input("Please Enter id of Instrutor you wish to remove")
         result  = self.conn.query(f"SELECT * FROM INSTRUTOR WHERE ID = {id}")
-        if not len(result)==0:
+        if result is not None:
             self.conn.queryExecute(f"DELETE FROM INSTRUCTOR WHERE ID = {id}")
         else :
             print("This student is not within the database")
@@ -482,14 +463,20 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
         print("-----------------------------\n0) Logout")
         if inst !=0:  # functions for instructor
             user_inst = Instructor(str(inst))
+            cursor.execute(f"""SELECT ID FROM INSTRUCTOR WHERE SURNAME = '{inst[0]}'""")#temp query to set ID
+            query_result = cursor.fetchall()
+            user_inst.ID = query_result[0][0]
             print("1) Assemble and print course roster.")
+            print("2) Print teaching schedule")
             print("5) Search all courses")
             print("6) Search courses with a filter")
             select = int(input("Selct an option: "))
             if select == 0:
                 print("********** Goodbye! **********")
             elif select == 1:
-                user_inst.print_roster()    #Billy Hingston
+                user_inst.print_search_roster()    #Billy Hingston
+            elif select == 2:
+                user_inst.print_teaching() #Regis
             elif select == 5:
                 user_inst.search_all()    
             elif select == 6:
@@ -520,10 +507,6 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
             print("4) Remove a course from a student")
             print("5) Search all courses")
             print("6) Search courses with a filter")
-            print("7) Add a new student")
-            print("8) Remove a student")
-            print("9) Add a new instructor")
-            print("10) Remove an instructor")
             select = int(input("Selct an option: "))
             if (select == 0):
                 print("********** Goodbye! **********")
@@ -539,14 +522,6 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
                 user_admin.search_all()    
             elif select == 6:
                 user_admin.search_filter()
-            elif select == 7:
-                user_admin.addStudent()
-            elif select == 8:
-                user_admin.removeStudent()
-            elif select == 9:
-                user_admin.addInstructor()
-            elif select == 10:
-                user_admin.removeInstructor()
         else:
             print("Invalid Selection")
 else:

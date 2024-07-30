@@ -14,6 +14,7 @@ class dbConnection:
     db=None
     
     def __init__(self):
+ 
         self.db = sqlite3.connect(self.DatabaseURI)
         self.cur = self.db.cursor()
         
@@ -200,7 +201,7 @@ class Instructor(User):
         self.roster = []    
         self.sur_name = in_name
 
-    def print_roster(self):     #Billy Hingston
+    def print_search_roster(self):     #Billy Hingston
         crn = input("To see all students in the course, enter CRN of course: ")
         query_result = self.conn.query("SELECT NAME from STUDENT where CLASS1 =  '" + crn + "'")
         for i in query_result:
@@ -224,14 +225,32 @@ class Instructor(User):
             self.roster.append(app)
         namecount = 0
         for i in self.roster:
-            print (i)
+            print (i[0])
             if testactive:
                     assert str(i[0]) == str(testassert[namecount + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
                     print('✔ Test Passed!') 
                     namecount += 1        
-    # def SearchCourseRoster(self):
-    #     #IDK what this is supposed to do
-    #     return True
+        search = input("If you would like to search for a specific student, press 1. Otherwise, press 0 to return to the main menu: ") #Regis
+        if search == '1':
+            student_found = 0
+            get_student = input("Please enter the first name of the student you want to search for: ")
+            for i in self.roster:
+                if i[0] == get_student:
+                    student_found = 1
+                    print(i[0])
+            if student_found == 0:
+                print("Student not found!")
+
+   # def SearchCourseRoster(self):
+   #    #functionality merged into print_search_roster        
+   #   return True
+
+    def print_teaching(self): #Regis
+        inst_dept = self.conn.query(f"""SELECT DEPT FROM INSTRUCTOR WHERE ID = {self.ID} """)
+        query_result = self.conn.query(f"""SELECT * FROM COURSE WHERE DEPARTMENT = '{inst_dept[0][0]}'""")
+        print('Displayed below is your teaching schedule: ')
+        for i in query_result:
+            print(i)
        
 class Admin(User):
     
@@ -242,8 +261,6 @@ class Admin(User):
         addCRN = input("Enter the course CRN you want to add: ")
         results = self.conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
         if (len(results)==0):
-          #  testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
-
             def test():
                 addTitle = input("Enter the title: ")
                 addDep = input("Enter the department: ")
@@ -395,6 +412,7 @@ class Admin(User):
 
         #logic to check that email is still available
         hireYear = datetime.now().year
+										   
         self.conn.queryExecute(f"INSERT INTO INSTRUCTOR VALUES('{id}', '{name}', '{surname}', '{title}',  '{hireYear}', '{email}','{password}','{dept}')")
 
     #Jared
@@ -482,14 +500,20 @@ if stud != 0 or inst != 0 or adm != 0:  #Billy Hingston
         print("-----------------------------\n0) Logout")
         if inst !=0:  # functions for instructor
             user_inst = Instructor(str(inst))
+            cursor.execute(f"""SELECT ID FROM INSTRUCTOR WHERE SURNAME = '{inst[0]}'""")#temp query to set ID
+            query_result = cursor.fetchall()
+            user_inst.ID = query_result[0][0]
             print("1) Assemble and print course roster.")
+            print("2) Print teaching schedule")
             print("5) Search all courses")
             print("6) Search courses with a filter")
             select = int(input("Selct an option: "))
             if select == 0:
                 print("********** Goodbye! **********")
             elif select == 1:
-                user_inst.print_roster()    #Billy Hingston
+                user_inst.print_search_roster()    #Billy Hingston
+            elif select == 2:
+                user_inst.print_teaching() #Regis
             elif select == 5:
                 user_inst.search_all()    
             elif select == 6:

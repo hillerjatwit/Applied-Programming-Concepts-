@@ -17,7 +17,7 @@ from tkinter import messagebox
 #Jared
 class dbConnection:
     
-    DatabaseURI="assignment5.db"
+    DatabaseURI="LeopardWeb.db"
     cur=None
     db=None
     
@@ -194,36 +194,116 @@ class Student(User):
                 messagebox.showinfo(f"Course {CRN} was not added")
     #Jared
     def removeCourse():
-        #Check if CRN exists
-        CRN = int(remove_course_CRN.get())
-        Found = False
+        removeclass = remove_course_CRN.get()
+        stuID = stud.ID
+        #results = stud.conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where NAME = '{stuID}' """)
         
-        results = conn.query(f"SELECT * FROM COURSE WHERE CRN = '{CRN}'")
-        if (results is not None):
-            #Need logic to check if credits match
-            row =  list(conn.query(f"SELECT CLASS1, CLASS2, CLASS3, CLASS4, CLASS5 FROM STUDENT WHERE ID = '{stud.ID}'"))
-            for i in range(5):
-                if (row[i] == CRN):
-                    Found = True
-                    conn.queryExecute(f"UPDATE STUDENT SET CLASS{i+1} = 'NULL' WHERE ID = '{stud.ID}'")
-            
-            if (Found):
-                messagebox.showinfo(f"Course {CRN} was Removed")
-            else:
-                messagebox.showinfo(f"Course {CRN} was not Found")
-            showStudentMainpage()
-    
-    def checkConflict(self):
-        results = self.conn.query("SELECT REGISTEREDCOURSES FROM STUDENTS WHERE EMAIL = '" + self.Email+ "'")
-        for row in results:
-            #logic for checking for conflicts
-            result =1          
+        # for i in results:
+        #     print("The courses being taken are:")
+        #     print(i)
+        i = 1;
+        if (i==1):
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS1 = NULL WHERE CLASS1 = '{removeclass}' AND ID = '{stuID}'")
+            i = 2;
+        elif(i==1):
+            conn.queryExecute (f"UPDATE STUDENT SET CLASS2 = NULL WHERE CLASS2 = '{removeclass}' AND ID = '{stuID}'")
+            i = 2;
+        elif(i==1):
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS3 = NULL WHERE CLASS3 = '{removeclass}' AND ID = '{stuID}'")
+            i = 2;
+        elif(i==1):
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = '{removeclass}' AND ID = '{stuID}'")
+            i = 2;
+        else:
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = '{removeclass}' AND ID = '{stuID}'")
+   
+   # Billy
+    def time_conflicts(self):
+        stuID = self.Surname
+        results = conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where NAME = '{stuID}' """)
+        time0 = str(self.conn.query(f"""Select TIME From COURSE Where CRN = '{results[0]}' """))
+        time1 = str(self.conn.query(f"""Select TIME From COURSE Where CRN = '{results[1]}' """))
+        time2 = str(self.conn.query(f"""Select TIME From COURSE Where CRN = '{results[2]}' """))
+        time3 = str(self.conn.query(f"""Select TIME From COURSE Where CRN = '{results[3]}' """))
+        time4 = str(self.conn.query(f"""Select TIME From COURSE Where CRN = '{results[4]}' """))
+        time0 = ''.join(e  for e in time0 if e.isalnum())
+        time1 = ''.join(e  for e in time1 if e.isalnum())
+        time2 = ''.join(e  for e in time2 if e.isalnum())
+        time3 = ''.join(e  for e in time3 if e.isalnum())
+        time4 = ''.join(e  for e in time4 if e.isalnum())
+
+        if time0 == '':
+            time0 = -3
+        if time1 == '':
+            time1 = -6
+        if time2 == '':
+            time2 = -9
+        if time3 == '':
+            time3 = -12
+        if time4 == '':
+            time4 = -15
+        print("---------------------------")
+        print("(CLASSES ARE 1:50)")
+        print("Times of all 5 classes: ")
+        if int(time0) >= 0:
+            print("Class 1 starts at " + str(time0))
+        if int(time1) >= 0:
+           print("Class 2 starts at " + str(time1))
+        if int(time2) >= 0:
+            print("Class 3 starts at " + str(time2))
+        if int(time3) >= 0:
+            print("Class 4 starts at " + str(time3))
+        if int(time4) >= 0:
+            print("Class 5 starts at " + str(time4))
+        print("---------------------------")
+        conflict = 0
+        if (int(time0) == int(time1)) or (int(time0) == int(time2)) or (int(time0) == int(time3)) or (int(time0) == int(time4)):
+            print("Time confliction: Class 1 starts at same time as another class.")
+            conflict = 1
+        if (int(time1) == int(time0)) or (int(time1) == int(time2)) or (int(time1) == int(time3)) or (int(time1) == int(time4)):
+            print("Time confliction: Class 2 starts at same time as another class.")
+            conflict = 1
+        if (int(time2) == int(time1)) or (int(time2) == int(time0)) or (int(time2) == int(time3)) or (int(time2) == int(time4)):
+            print("Time confliction: Class 3 starts at same time as another class.")
+            conflict = 1
+        if (int(time3) == int(time1)) or (int(time3) == int(time2)) or (int(time3) == int(time0)) or (int(time3) == int(time4)):
+            print("Time confliction: Class 4 starts at same time as another class.")
+            conflict = 1
+        if (int(time4) == int(time1)) or (int(time4) == int(time2)) or (int(time4) == int(time3)) or (int(time4) == int(time0)):
+            print("Time confliction: Class 5 starts at same time as another class.")
+            conflict = 1
+
+
+        if ((int(time0) + 1) == int(time1)) or ((int(time0) + 1) == int(time2)) or ((int(time0) + 1) == int(time3)) or ((int(time0) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 1.")
+            conflict = 1
+        if ((int(time1) + 1) == int(time0)) or ((int(time1) + 1) == int(time2)) or ((int(time1) + 1) == int(time3)) or ((int(time1) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 2.")
+            conflict = 1
+        if ((int(time2) + 1) == int(time1)) or ((int(time2) + 1) == int(time0)) or ((int(time2) + 1) == int(time3)) or ((int(time2) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 3.")
+            conflict = 1
+        if ((int(time3) + 1) == int(time1)) or ((int(time3) + 1) == int(time2)) or ((int(time3) + 1) == int(time0)) or ((int(time3) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 4.")
+            conflict = 1
+        if ((int(time4) + 1) == int(time1)) or ((int(time4) + 1) == int(time2)) or ((int(time4) + 1) == int(time3)) or ((int(time4) + 1) == int(time0)):
+            print("Time confliction: Another class begins during Class 5.")
+            conflict = 1
+
+        if conflict == 0:
+            print("No time conflictons")
             
     def printSchedule():
         #fix to print all courses
-        result = conn.query(f"SELECT REGISTEREDCOURSES FROM STUDENT WHERE ID = '{stud.ID}'")
-        for row in result:
-            print(row)
+
+        results = conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stud.ID} """)
+        print("The courses being taken are:")
+        for i in results:
+            print(i)
+
+        # result = conn.query(f"SELECT REGISTEREDCOURSES FROM STUDENT WHERE ID = '{stud.ID}'")
+        # for row in result:
+        #     print(row)
 
 class Instructor(User):
     #Class Attributes 
@@ -333,8 +413,7 @@ class Admin(User):
     def add_course_student(self):               #Micah
         stuID=input("Please enter a students ID: ")
         ClassAdd=input("Enter the course CRN you want to add: ")
-        cursor.execute(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
-        results=cursor.fetchone()
+        results =self.conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
         if results is not None:
             classes = ['CLASS1', 'CLASS2', 'CLASS3', 'CLASS4', 'CLASS5']
             nextClass = None

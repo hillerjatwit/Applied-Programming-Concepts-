@@ -349,7 +349,12 @@ class Instructor(User):
     # def SearchCourseRoster(self):
     #     #IDK what this is supposed to do
     #     return True
-       
+    def print_teaching(self): #Regis
+        inst_dept = self.conn.query(f"""SELECT DEPT FROM INSTRUCTOR WHERE ID = {self.ID} """)
+        query_result = self.conn.query(f"""SELECT * FROM COURSE WHERE DEPARTMENT = '{inst_dept[0][0]}'""")
+        print('Displayed below is your teaching schedule: ')
+        for i in query_result:
+            print(i)
 class Admin(User):
     
     def __init__(self, in_name):

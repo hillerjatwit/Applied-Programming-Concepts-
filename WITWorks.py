@@ -333,10 +333,10 @@ class Admin(User):
             
         adminBackToMain()
             
-    def remove_course_student(self):     
+    def remove_course_student():     
         
-        stuID = ID_NUM.get()
-        classCRN = CRN.get()
+        stuID = removeStudentClass_ID.get()
+        classCRN = removeStudentClass_CRN.get()
         
         results = conn.query(f"Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{stuID}' ")
         
@@ -344,17 +344,16 @@ class Admin(User):
             print("The courses being taken are:")
             print(i)
         removeclass =input("Which course do you want to remove?")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS1 = NULL WHERE CLASS1 = {removeclass} AND ID = {stuID}")
-        conn.queryExecute (f"UPDATE STUDENT SET CLASS2 = NULL WHERE CLASS2 = {removeclass} AND ID = {stuID}")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS3 = NULL WHERE CLASS3 = {removeclass} AND ID = {stuID}")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = {removeclass} AND ID = {stuID}")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = {removeclass} AND ID = {stuID}")
+        conn.queryExecute(f"UPDATE STUDENT SET CLASS1 = NULL WHERE CLASS1 = {classCRN} AND ID = {stuID}")
+        conn.queryExecute (f"UPDATE STUDENT SET CLASS2 = NULL WHERE CLASS2 = {classCRN} AND ID = {stuID}")
+        conn.queryExecute(f"UPDATE STUDENT SET CLASS3 = NULL WHERE CLASS3 = {classCRN} AND ID = {stuID}")
+        conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = {classCRN} AND ID = {stuID}")
+        conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = {classCRN} AND ID = {stuID}")
 
-    def add_course_student(self):               #Micah
-        stuID=input("Please enter a students ID: ")
-        ClassAdd=input("Enter the course CRN you want to add: ")
-        cursor.execute(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
-        results=cursor.fetchone()
+    def add_course_student():               #Micah
+        stuID = addStudentClass_ID.get()
+        ClassAdd = addStudentClass_CRN.get()
+        results = conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
         if results is not None:
             classes = ['CLASS1', 'CLASS2', 'CLASS3', 'CLASS4', 'CLASS5']
             nextClass = None
@@ -365,14 +364,8 @@ class Admin(User):
                     break
 
             if nextClass:
-                self.conn.queryExecute(f"""UPDATE STUDENT SET {nextClass} = {ClassAdd} WHERE ID = {stuID}""")
-                print(f"Course {ClassAdd} added to {nextClass} for student ID {stuID}.")
-                if testactive:
-                    query_result = self.conn.query(f"""SELECT {nextClass} FROM STUDENT WHERE ID = {stuID}""")
-                    for i in query_result:
-                        for count, j in enumerate(i):
-                            assert str(i[count]) == str(testassert[count + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
-                            print('✔ Test Passed!')    
+                conn.queryExecute(f"""UPDATE STUDENT SET {nextClass} = {ClassAdd} WHERE ID = {stuID}""")
+                print(f"Course {ClassAdd} added to {nextClass} for student ID {stuID}.") 
             else:
                 print("No available slot to add the new class.")
         else:
@@ -514,6 +507,17 @@ def adminRemoveInstructor():
     admin_main_frame.pack_forget()
     admin_removeInstructor_frame.pack()
     admin_Instructor_update_confirm.configure(command=Admin.removeInstructor)
+
+def adminAddStudentCourse():
+    admin_main_frame.pack_forget()
+    addStudentClass_frame.pack()
+    addStudentClass_confirm.configure(command=Admin.add_course_student)
+    
+    
+def adminRemoveStudentCourse():
+    admin_main_frame.pack_forget()
+    removeStudentClass_frame.pack()
+    removeStudentClass_confirm.configure(command=Admin.remove_course_student)
     
 def adminBackToMain():
     admin_remove_class_frame.pack_forget()
@@ -621,11 +625,18 @@ admin_add_student.grid(row=1, column=1, pady=10)
 admin_remove_student = tk.Button(admin_main_frame, text="Remove Student", command=adminRemoveStudent)
 admin_remove_student.grid(row=1, column=2, pady=10)
 
-admin_add_Instructor = tk.Button(admin_main_frame, text="Add Student", command=adminAddStudent)
-admin_add_Instructor.grid(row=2, column=1, pady=10)
+admin_add_student_course = tk.Button(admin_main_frame, text="Add Student to Class", command=adminAddStudentCourse)
+admin_add_student_course.grid(row=2, column=1, pady=10)
 
-admin_remove_Instructor = tk.Button(admin_main_frame, text="Remove Student", command=adminRemoveStudent)
-admin_remove_Instructor.grid(row=2, column=2, pady=10)
+admin_remove_student_course = tk.Button(admin_main_frame, text="Remove Student from Class", command=adminRemoveStudentCourse)
+admin_remove_student_course.grid(row=2, column=2, pady=10)
+
+admin_add_Instructor = tk.Button(admin_main_frame, text="Add Instructor", command=adminAddInstructor)
+admin_add_Instructor.grid(row=3, column=1, pady=10)
+
+admin_remove_Instructor = tk.Button(admin_main_frame, text="Remove Instructor", command=adminRemoveInstructor)
+admin_remove_Instructor.grid(row=3, column=2, pady=10)
+
 
 #Admin Update Class
 admin_remove_class_frame = tk.Frame(root, padx=20, pady=20)
@@ -748,16 +759,21 @@ tk.Label(admin_addInstructor_frame, text="Password", font=("Arial", 12)).grid(ro
 addInstructorPassword = tk.Entry(admin_addInstructor_frame, font=("Arial", 12))
 addInstructorPassword.grid(row=3, column=2, pady=10)
 
-tk.Label(admin_addInstructor_frame, text="Major", font=("Arial", 12)).grid(row=4, column=0, pady=10, sticky="e")
-addInstructorMajor = tk.Entry(admin_addInstructor_frame, font=("Arial", 12))
-addInstructorMajor.grid(row=4, column=2, pady=10)
+tk.Label(admin_addInstructor_frame, text="Department", font=("Arial", 12)).grid(row=4, column=0, pady=10, sticky="e")
+addInstructorDepartment = tk.Entry(admin_addInstructor_frame, font=("Arial", 12))
+addInstructorDepartment.grid(row=4, column=2, pady=10)
+
+tk.Label(admin_addInstructor_frame, text="Title", font=("Arial", 12)).grid(row=5, column=0, pady=10, sticky="e")
+addInstructorTitle = tk.Entry(admin_addInstructor_frame, font=("Arial", 12))
+addInstructorTitle.grid(row=5, column=2, pady=10)
+
 
 
 admin_Instructor_update_confirm = tk.Button(admin_addInstructor_frame, text="Confirm")
-admin_Instructor_update_confirm.grid(row=5, column=0, pady=10)
+admin_Instructor_update_confirm.grid(row=6, column=0, pady=10)
 
 admin_Instructor_update_back = tk.Button(admin_addInstructor_frame, text="Back", command=adminBackToMain)
-admin_Instructor_update_back.grid(row=5, column=1, pady=10)
+admin_Instructor_update_back.grid(row=6, column=1, pady=10)
 
 
 #REMOVE STUDENT FRAME
@@ -774,9 +790,41 @@ admin_update_back = tk.Button(admin_removeInstructor_frame, text="Back", command
 admin_update_back.grid(row=2, column=1, pady=10)
 
 
+addStudentClass_frame = tk.Frame(root, padx=20, pady=20 )
+
+tk.Label(addStudentClass_frame, text="ID", font=("Arial", 12)).grid(row=1, column=0, pady=10, sticky="e")
+addStudentClass_ID = tk.Entry(addStudentClass_frame, font=("Arial", 12))
+addStudentClass_ID.grid(row=1, column=2, pady=10)
+
+tk.Label(addStudentClass_frame, text="CRN", font=("Arial", 12)).grid(row=2, column=0, pady=10, sticky="e")
+addStudentClass_CRN = tk.Entry(addStudentClass_frame, font=("Arial", 12))
+addStudentClass_CRN.grid(row=2, column=2, pady=10)
+
+addStudentClass_confirm = tk.Button(admin_addInstructor_frame, text="Confirm")
+addStudentClass_confirm.grid(row=3, column=0, pady=10)
+
+addStudentClass_back = tk.Button(admin_addInstructor_frame, text="Back", command=adminBackToMain)
+addStudentClass_back.grid(row=3, column=1, pady=10)
+
+removeStudentClass_frame = tk.Frame(root, padx=20, pady=20 )
+
+tk.Label(removeStudentClass_frame, text="ID", font=("Arial", 12)).grid(row=1, column=0, pady=10, sticky="e")
+removeStudentClass_ID = tk.Entry(removeStudentClass_frame, font=("Arial", 12))
+removeStudentClass_ID.grid(row=1, column=2, pady=10)
+
+tk.Label(removeStudentClass_frame, text="CRN", font=("Arial", 12)).grid(row=2, column=0, pady=10, sticky="e")
+removeStudentClass_CRN = tk.Entry(removeStudentClass_frame, font=("Arial", 12))
+removeStudentClass_CRN.grid(row=2, column=2, pady=10)
+
+removeStudentClass_confirm = tk.Button(admin_addInstructor_frame, text="Confirm")
+removeStudentClass_confirm.grid(row=3, column=0, pady=10)
+
+removeStudentClass_back = tk.Button(admin_addInstructor_frame, text="Back", command=adminBackToMain)
+removeStudentClass_back.grid(row=3, column=1, pady=10)
 
 
 root.mainloop()
+
 
 
 

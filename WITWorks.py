@@ -218,8 +218,8 @@ class Student(User):
             showStudentMainpage()
     
     def time_conflicts():
-        stuID = stud.ID
-        results = conn.queryMany(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{stuID}' """)
+        studID = stud.ID
+        results = conn.queryMany(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{studID}' """)
         time0 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][0]}' """))
         time1 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][1]}' """))
         time2 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][2]}' """))
@@ -294,10 +294,25 @@ class Student(User):
     
 
     def printSchedule():
-        #fix to print all courses
-        result = conn.query(f"SELECT REGISTEREDCOURSES FROM STUDENT WHERE ID = '{stud.ID}'")
-        for row in result:
-            print(row)
+        studID = stud.ID
+        results = conn.queryMany(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{studID}' """)
+        class1 = str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][0]}' """))
+        class2= str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][1]}' """))
+        class3 = str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][2]}' """))
+        class4 = str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][3]}' """))
+        class5 = str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][4]}' """))
+        class1 = ''.join(e  for e in class1 if e.isalnum())
+        class2 = ''.join(e  for e in class2 if e.isalnum())
+        class3 = ''.join(e  for e in class3 if e.isalnum())
+        class4 = ''.join(e  for e in class4 if e.isalnum())
+        class5 = ''.join(e  for e in class5 if e.isalnum())
+        print("Class1 is: " + class1)
+        print("Class2 is: " + class2)
+        print("Class3 is: " + class3)
+        print("Class4 is: " + class4)
+        print("Class5 is: " + class5)
+
+
 
 class Instructor(User):
     #Class Attributes 
@@ -731,6 +746,9 @@ remove_course_button.grid(row=0, column=2, pady=10)
 
 check_conflicts_button = tk.Button(main_student_frame, text="Check Time Conflicts", command=Student.time_conflicts)
 check_conflicts_button.grid(row=0, column=3, pady=10)
+
+student_back_Button = tk.Button(main_student_frame, text="Back", command=ReturnToLogin)
+student_back_Button.grid(row=10, column=2, pady=10)
 
 
 remove_course_frame = tk.Frame(root, padx=20, pady=20)

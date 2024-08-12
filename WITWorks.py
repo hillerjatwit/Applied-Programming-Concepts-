@@ -217,11 +217,80 @@ class Student(User):
                 messagebox.showinfo(f"Course {CRN} was not Found")
             showStudentMainpage()
     
-    def checkConflict(self):
-        results = self.conn.query("SELECT REGISTEREDCOURSES FROM STUDENTS WHERE EMAIL = '" + self.Email+ "'")
-        for row in results:
-            #logic for checking for conflicts
-            result =1  
+    def time_conflicts():
+        stuID = stud.ID
+        results = conn.queryMany(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{stuID}' """)
+        time0 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][0]}' """))
+        time1 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][1]}' """))
+        time2 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][2]}' """))
+        time3 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][3]}' """))
+        time4 = str(conn.query(f"""Select TIME From COURSE Where CRN = '{results[0][4]}' """))
+        time0 = ''.join(e  for e in time0 if e.isalnum())
+        time1 = ''.join(e  for e in time1 if e.isalnum())
+        time2 = ''.join(e  for e in time2 if e.isalnum())
+        time3 = ''.join(e  for e in time3 if e.isalnum())
+        time4 = ''.join(e  for e in time4 if e.isalnum())
+
+        if time0 == 'None':
+            time0 = -3
+        if time1 == 'None':
+            time1 = -6
+        if time2 == 'None':
+            time2 = -9
+        if time3 == 'None':
+            time3 = -12
+        if time4 == 'None':
+            time4 = -15
+        print("---------------------------")
+        print("(CLASSES ARE 1:50)")
+        print("Times of all 5 classes: ")
+        if int(time0) >= 0:
+            print("Class 1 starts at " + str(time0))
+        if int(time1) >= 0:
+           print("Class 2 starts at " + str(time1))
+        if int(time2) >= 0:
+            print("Class 3 starts at " + str(time2))
+        if int(time3) >= 0:
+            print("Class 4 starts at " + str(time3))
+        if int(time4) >= 0:
+            print("Class 5 starts at " + str(time4))
+        print("---------------------------")
+        conflict = 0
+        if (int(time0) == int(time1)) or (int(time0) == int(time2)) or (int(time0) == int(time3)) or (int(time0) == int(time4)):
+            print("Time confliction: Class 1 starts at same time as another class.")
+            conflict = 1
+        if (int(time1) == int(time0)) or (int(time1) == int(time2)) or (int(time1) == int(time3)) or (int(time1) == int(time4)):
+            print("Time confliction: Class 2 starts at same time as another class.")
+            conflict = 1
+        if (int(time2) == int(time1)) or (int(time2) == int(time0)) or (int(time2) == int(time3)) or (int(time2) == int(time4)):
+            print("Time confliction: Class 3 starts at same time as another class.")
+            conflict = 1
+        if (int(time3) == int(time1)) or (int(time3) == int(time2)) or (int(time3) == int(time0)) or (int(time3) == int(time4)):
+            print("Time confliction: Class 4 starts at same time as another class.")
+            conflict = 1
+        if (int(time4) == int(time1)) or (int(time4) == int(time2)) or (int(time4) == int(time3)) or (int(time4) == int(time0)):
+            print("Time confliction: Class 5 starts at same time as another class.")
+            conflict = 1
+
+
+        if ((int(time0) + 1) == int(time1)) or ((int(time0) + 1) == int(time2)) or ((int(time0) + 1) == int(time3)) or ((int(time0) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 1.")
+            conflict = 1
+        if ((int(time1) + 1) == int(time0)) or ((int(time1) + 1) == int(time2)) or ((int(time1) + 1) == int(time3)) or ((int(time1) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 2.")
+            conflict = 1
+        if ((int(time2) + 1) == int(time1)) or ((int(time2) + 1) == int(time0)) or ((int(time2) + 1) == int(time3)) or ((int(time2) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 3.")
+            conflict = 1
+        if ((int(time3) + 1) == int(time1)) or ((int(time3) + 1) == int(time2)) or ((int(time3) + 1) == int(time0)) or ((int(time3) + 1) == int(time4)):
+            print("Time confliction: Another class begins during Class 4.")
+            conflict = 1
+        if ((int(time4) + 1) == int(time1)) or ((int(time4) + 1) == int(time2)) or ((int(time4) + 1) == int(time3)) or ((int(time4) + 1) == int(time0)):
+            print("Time confliction: Another class begins during Class 5.")
+            conflict = 1
+
+        if conflict == 0:
+            print("No time conflictons")     
     
 
     def printSchedule():
@@ -660,7 +729,9 @@ add_course_button.grid(row=0, column=1, pady=10)
 remove_course_button = tk.Button(main_student_frame, text="Remove Course", command=showStudentRemoveClass)
 remove_course_button.grid(row=0, column=2, pady=10)
 
-add_course_button = tk.Button(main_student_frame, text="Add Course", command=showStudentAddClass)
+check_conflicts_button = tk.Button(main_student_frame, text="Check Time Conflicts", command=Student.time_conflicts)
+check_conflicts_button.grid(row=0, column=3, pady=10)
+
 
 remove_course_frame = tk.Frame(root, padx=20, pady=20)
 
@@ -938,7 +1009,6 @@ removeStudentClass_back.grid(row=3, column=1, pady=10)
 
 
 root.mainloop()
-
 
 
 

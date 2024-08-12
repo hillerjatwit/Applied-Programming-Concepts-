@@ -692,6 +692,8 @@ def ReturnToLogin():
     login_frame.pack()
     admin_main_frame.pack_forget()
     admin_removeInstructor_frame.pack_forget()
+    main_student_frame.pack_forget()
+
 
 
 def show_signup_page():
@@ -724,11 +726,7 @@ login_password_entry.grid(row=1, column=1, pady=10)
 login_button = tk.Button(login_frame, text="Login", command=User.login)
 login_button.grid(row=2, column=0, pady=10)
 
-signup_button = tk.Button(login_frame, text="Sign Up", command=show_signup_page)
-signup_button.grid(row=2, column=1, pady=10)
 
-reset_button = tk.Button(login_frame, text="Forgot Password", command=reset_password)
-reset_button.grid(row=3, columnspan=2, pady=10)
 
 
 

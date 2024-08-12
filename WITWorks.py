@@ -17,7 +17,7 @@ from tkinter import messagebox
 #Jared
 class dbConnection:
     
-    DatabaseURI="assignment5.db"
+    DatabaseURI="LeopardWeb.db"
     cur=None
     db=None
     
@@ -116,7 +116,7 @@ class User:
             else:
                 raise TypeError("Invalid Usertype")
         else :
-            raise Exception("Credentials Not Found")
+            messagebox.showwarning("FAIL", "INVALID CREDENTIALS")
             
             
     def logout(self):
@@ -286,40 +286,53 @@ class Admin(User):
         
     def add_course():       #Micah
         addCRN = ClassCRN.get()
-        results = conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
-        if results is None:
-          #  testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
+        addDOW = ClassDOW.get()
+        addSemester = ClassSemester.get()
+        addYear = ClassYear.get()
+        addCredit = ClassCredits.get()
+        addTitle = ClassTitle.get()
+        addDepartment = ClassDepartment.get()
+        addTime = ClassTime.get()
+        try:
+            results = conn.query(f"""Select TITLE From COURSE Where CRN = {addCRN} """)
+            if results is None:
+            #  testinputs = ["Hi", "CS", 10, "Thu", "Summer", 2021, 3]
 
-            departments = ["BSCO", "BSEE", "HUSS", "BSME", "BSBE"]
-            semesters = ["Fall", "Summer", "Spring"]
-            Credits = ["2", "3", "4"]
+                departments = ["BSCO", "BSEE", "HUSS", "BSME", "BSBE"]
+                semesters = ["Fall", "Summer", "Spring"]
+                Credits = ["2", "3", "4"]
 
-
-            addTitle = ClassTitle.get()
-            addDepartment = ClassDepartment.get()
-            if (addDepartment not in departments):
-                messagebox.showerror("Invalid Department Type")
-                return
-            addTime = ClassTime.get()
-            if not addTime.isnumeric():
-                messagebox.showerror("Invalid Input")
-            addDOW = ClassDOW.get()
-            addSemester = ClassSemester.get()
-            if (addSemester not in semesters):
-                messagebox.showerror("Invalid Semester Type")
-                return
-            addYear = ClassYear.get()
-            if not addYear.isnumeric():
-                messagebox.showerror("Invalid Input")
-            addCredit = ClassCredits.get()
-            if addCredit not in Credits:
-                messagebox.showerror("Invalid Credit Amount")
-                
-            conn.queryExecute(f"INSERT INTO COURSE VALUES({addCRN}, '{addTitle}','{addDepartment}', {addTime}, '{addDOW}', '{addSemester}', {addYear}, {addCredit})") 
-        else:
-            print("Course already has that CRN")
+                try:  
+                    conn.queryExecute(f"INSERT INTO COURSE VALUES({addCRN}, '{addTitle}','{addDepartment}', {addTime}, '{addDOW}', '{addSemester}', {addYear}, {addCredit})") 
+                    messagebox.showwarning("Sucess","Class Successfully added")    
+                    ClassCRN.delete(0,tk.END)
+                    ClassTitle.delete(0,tk.END)
+                    ClassDepartment.delete(0,tk.END)
+                    ClassTime.delete(0,tk.END)
+                    ClassDOW.delete(0,tk.END)
+                    ClassSemester.delete(0,tk.END)
+                    ClassYear.delete(0,tk.END)
+                    ClassCredits.delete(0,tk.END)    
+                    adminBackToMain()
+                except:
+                    if (addDepartment not in departments):
+                        messagebox.showwarning("Failure","Invalid Department Type")
+                    elif not addTime.isnumeric():
+                        messagebox.showwarning("Failure","Invalid Input")
+                    elif (addSemester not in semesters):
+                        messagebox.showwarning("Failure","Invalid Semester Type")
+                    elif not addYear.isnumeric():
+                        messagebox.showwarning("Failure","Invalid Input")
+                    elif addCredit not in Credits:
+                        messagebox.showwarning("Failure","Invalid Credit Amount")
+                    else:
+                        messagebox.showwarning("Failure","Please Ensure All Boxes Are Filled")
+        except:
+            messagebox.showwarning("Failure","Please Enter A CRN")  
+            results = None 
             
-        adminBackToMain()
+            
+
         
     def remove_course():        #Micah
         
@@ -327,11 +340,13 @@ class Admin(User):
         
         results = conn.query(f"Select TITLE From COURSE Where CRN = '{removeCRN}'")
         if results is None:
-            print("A course with that CRN does not exist")
+            messagebox.showwarning("Failure","A Course With That CRN Does Not Exist")
         else:
             conn.queryExecute(f"DELETE FROM COURSE WHERE CRN = {removeCRN}")
-            
-        adminBackToMain()
+            messagebox.showwarning("Success","Course Deleted")
+            ClassRemoveCRN.delete(0,tk.END)
+            adminBackToMain()
+
             
     def remove_course_student():     
         
@@ -340,19 +355,28 @@ class Admin(User):
         
         results = conn.query(f"Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{stuID}' ")
         
-        for i in results:
-            print("The courses being taken are:")
-            print(i)
-        removeclass =input("Which course do you want to remove?")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS1 = NULL WHERE CLASS1 = {classCRN} AND ID = {stuID}")
-        conn.queryExecute (f"UPDATE STUDENT SET CLASS2 = NULL WHERE CLASS2 = {classCRN} AND ID = {stuID}")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS3 = NULL WHERE CLASS3 = {classCRN} AND ID = {stuID}")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = {classCRN} AND ID = {stuID}")
-        conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = {classCRN} AND ID = {stuID}")
+        try:
+            conn.queryExecute(f"SELECT NAME FROM STUDENT WHERE ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS1 = NULL WHERE CLASS1 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute (f"UPDATE STUDENT SET CLASS2 = NULL WHERE CLASS2 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS3 = NULL WHERE CLASS3 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = {classCRN} AND ID = {stuID}")
+            messagebox.showwarning("Success","Course Deleted From Student")
+            removeStudentClass_ID.delete(0,tk.END)
+            removeStudentClass_CRN.delete(0,tk.END)
+            adminBackToMain()
+        except:
+            messagebox.showwarning("Failure","Student Doesn't take Class ")
+
+       
+
 
     def add_course_student():               #Micah
         stuID = addStudentClass_ID.get()
         ClassAdd = addStudentClass_CRN.get()
+   
+
         results = conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
         if results is not None:
             classes = ['CLASS1', 'CLASS2', 'CLASS3', 'CLASS4', 'CLASS5']
@@ -365,17 +389,22 @@ class Admin(User):
 
             if nextClass:
                 conn.queryExecute(f"""UPDATE STUDENT SET {nextClass} = {ClassAdd} WHERE ID = {stuID}""")
-                print(f"Course {ClassAdd} added to {nextClass} for student ID {stuID}.") 
+                messagebox.showwarning("Success","Course Added To Students Schedule")
+                addStudentClass_ID.delete(0,tk.END)
+                addStudentClass_CRN.delete(0,tk.END)
+                adminBackToMain()
+
             else:
-                print("No available slot to add the new class.")
+              messagebox.showwarning("Failure","Students Schedule Is Full")
         else:
-            print(f"No student found with ID {stuID}.")
+            messagebox.showwarning("Fallure","No Student With That ID Exists")
             #Jared
+   
     
     def addStudent():
         highest=0
         #Logic to make ID sequential
-        existing_id= conn.queryMany("SELECT ID FROM USERS")
+        existing_id= conn.queryMany("SELECT ID FROM STUDENT")
         for i in range(len(existing_id)):
             if existing_id[i][0] > highest:
                 highest = existing_id[i][0]
@@ -385,76 +414,111 @@ class Admin(User):
         surname = addStudentSurname.get()
         email = surname + name[0]
         tempemail=email
+     
         #logic to check that email is still available from both student and instructors emails
-        existing_id= conn.query("SELECT EMAIL FROM USERS")
+        existing_id= conn.queryMany("SELECT EMAIL FROM USERS")
         for i in range(len(existing_id)):
             if existing_id[i][0] == tempemail:
                 if not str(existing_id[i][0][-1]).isdigit():
                     tempemail = email+"1"
                 else:
-                    new_val= int(existing_id[i][5][-1])+1
+                    new_val= int(existing_id[i][0][-1])+1
                     tempemail = f"{email}{new_val}"
         email= tempemail
 
         gradYear = datetime.now().year + 4
         major = addStudentMajor.get()
         password= addStudentPassword.get()
-        conn.queryExecute(f"INSERT INTO STUDENT VALUES('{id}', '{name}', '{surname}', '{gradYear}', '{major}', '{email}','{password}',NULL,NULL,NULL,NULL,NULL)")
-        conn.queryExecute(f"INSERT INTO USERS VALUES ('{id}', '{name}', '{surname}', 'STUDENT', '{email}' , '{password}')") 
-        adminBackToMain()
+        try:
+            conn.queryExecute(f"INSERT INTO STUDENT VALUES('{id}', '{name}', '{surname}', '{gradYear}', '{major}', '{email}','{password}',NULL,NULL,NULL,NULL,NULL)")
+            conn.queryExecute(f"INSERT INTO USERS VALUES ('{id}', '{name}', '{surname}', 'STUDENT', '{email}' , '{password}')") 
+            messagebox.showwarning("Success", "Student Sucessfully Added")
+            addStudentName.delete(0,tk.END)
+            addStudentSurname.delete(0,tk.END)
+            addStudentMajor.delete(0,tk.END)
+            addStudentPassword.delete(0,tk.END)
+            adminBackToMain()
+
+        except:
+            messagebox.showwarning("Fail", "Fail")
+
     
     def removeStudent():
         id = removeStudentID.get()
+
         result  = conn.query(f"SELECT * FROM STUDENT WHERE ID = {id}")
         if result is not None:
             conn.queryExecute(f"DELETE FROM STUDENT WHERE ID = {id}")
             conn.queryExecute(f"DELETE FROM USERS WHERE ID = {id}")
+            messagebox.showwarning("SUCCESS", "STUDENT DELETED")
+            removeStudentID.delete(0,tk.END)
+            adminBackToMain()
         else:
-            print("This student is not within the database")
+            messagebox.showwarning("FAIL", "STUDENT DOES NOT EXIST")
+  
+
     #Jared
-    def addInstructor(self):
+    def addInstructor():
         highest = 0
         #Logic for sequential ID
-        existing_id= self.conn.query(f"SELECT * FROM INSTRUCTOR")
+        existing_id= conn.queryMany(f"SELECT ID FROM INSTRUCTOR")
         for i in range(len(existing_id)):
             if int(existing_id[i][0]) > highest:
                 highest = int(existing_id[i][0])
         id = highest+1  
 
-        name = input("Enter Name: ")
-        surname = input("Enter surname: ")
+        name = addInstructorName.get()
+        surname = addInstructorSurname.get()
+        dept = addInstructorDepartment.get()
+        title= addInstructorTitle.get()
+        password=addInstructorPassword.get()
         email = surname + name[0]
         tempemail=email
 
         #logic to check that email is still available from both student and instructors emails
-        existing_id= self.conn.query("SELECT * FROM STUDENT ")
-        existing_id = existing_id + self.conn.query(" SELECT * FROM INSTRUCTOR")
+        existing_id= conn.queryMany("SELECT EMAIL FROM USERS")
 
         for i in range(len(existing_id)):
-            if existing_id[i][5] == tempemail:
-                if not str(existing_id[i][5][-1]).isdigit():
+            if existing_id[i][0] == tempemail:
+                if not str(existing_id[i][0][-1]).isdigit():
                     tempemail = email+"1"
                 else:   
-                    new_val= int(existing_id[i][5][-1])+1
+                    new_val= int(existing_id[i][0][-1])+1
                     tempemail = f"{email}{new_val}"
         email= tempemail
 
-        title = input("Enter Instrutor's title: ")
-        dept = input("Enter instrutor's Department: ")
-        password = input("Enter instrutor's password: ")
-
         #logic to check that email is still available
         hireYear = datetime.now().year
-        self.conn.queryExecute(f"INSERT INTO INSTRUCTOR VALUES('{id}', '{name}', '{surname}', '{title}',  '{hireYear}', '{email}','{password}','{dept}')")
+        try:
+            conn.queryExecute(f"INSERT INTO INSTRUCTOR VALUES('{id}', '{name}', '{surname}', '{title}',  '{hireYear}', '{dept}','{email}','{password}')")
+            conn.queryExecute(f"INSERT INTO USERS VALUES('{id}', '{name}', '{surname}', 'INSTRUCTOR','{email}','{password}')")
+
+            messagebox.showwarning("SUCCESS", "Instructor Added")     
+            name = addInstructorName.delete(0,tk.END)
+            surname = addInstructorSurname.delete(0,tk.END)
+            department = addInstructorDepartment.delete(0,tk.END)
+            title= addInstructorTitle.delete(0,tk.END)
+            password=addInstructorPassword.delete(0,tk.END)
+            adminBackToMain()
+        except:
+            messagebox.showwarning("FAIL", "Invalid Inputs")
+
+
     #Jared
     def removeInstructor():
         id = removeInstructorID.get()
-        result  = conn.query(f"SELECT * FROM INSTRUTOR WHERE ID = '{id}'")
+
+        result  = conn.query(f"SELECT * FROM Instructor WHERE ID = {id}")
         if result is not None:
-            conn.queryExecute(f"DELETE FROM INSTRUCTOR WHERE ID = '{id}'")
-            conn.queryExecute(f"DELETE FROM USERS WHERE ID = '{id}'")
-        else :
-            print("This student is not within the database")
+            conn.queryExecute(f"DELETE FROM Instructor WHERE ID = {id}")
+            conn.queryExecute(f"DELETE FROM USERS WHERE ID = {id}")
+            messagebox.showwarning("SUCCESS", "Instructor Deleted")
+            removeInstructorID.delete(0,tk.END)
+            adminBackToMain()
+        else:
+            messagebox.showwarning("FAIL", "Instructor Does Not Exist")
+
+    
 
 #GUI Functions
 def showStudentMainpage():
@@ -486,27 +550,30 @@ def adminAddCourse():
 def adminRemoveCourse():
     admin_main_frame.pack_forget()
     admin_remove_class_frame.pack()
+    #Admin.remove_course()
     admin_remove_class_confirm.configure(command=Admin.remove_course)
     
 def adminAddStudent():
     admin_main_frame.pack_forget()
     admin_addStudent_frame.pack()
-    admin_update_confirm.configure(command=Admin.addStudent)
+    #Admin.addStudent()
+    admin_update_confirm_add.configure(command=Admin.addStudent)
     
 def adminRemoveStudent():
     admin_main_frame.pack_forget()
     admin_removeStudent_frame.pack()
-    admin_update_confirm.configure(command=Admin.removeStudent)
+    #Admin.removeStudent()
+    admin_update_confirm_remove.configure(command=Admin.removeStudent)
     
 def adminAddInstructor():
     admin_main_frame.pack_forget()
     admin_addInstructor_frame.pack()
-    admin_Instructor_update_confirm.configure(command=Admin.addInstructor)
+    admin_Instructor_add.configure(command=Admin.addInstructor)
     
 def adminRemoveInstructor():
     admin_main_frame.pack_forget()
     admin_removeInstructor_frame.pack()
-    admin_Instructor_update_confirm.configure(command=Admin.removeInstructor)
+    admin_Instructor_remove.configure(command=Admin.removeInstructor)
 
 def adminAddStudentCourse():
     admin_main_frame.pack_forget()
@@ -520,11 +587,28 @@ def adminRemoveStudentCourse():
     removeStudentClass_confirm.configure(command=Admin.remove_course_student)
     
 def adminBackToMain():
+    admin_addInstructor_frame.pack_forget()
     admin_remove_class_frame.pack_forget()
     admin_add_class_frame.pack_forget()
     admin_addStudent_frame.pack_forget()
+    addStudentClass_frame.pack_forget()
+    removeStudentClass_frame.pack_forget()
     admin_removeStudent_frame.pack_forget()
     admin_main_frame.pack()
+    admin_removeInstructor_frame.pack_forget()
+
+def ReturnToLogin():
+    admin_addInstructor_frame.pack_forget()
+    admin_remove_class_frame.pack_forget()
+    admin_add_class_frame.pack_forget()
+    admin_addStudent_frame.pack_forget()
+    addStudentClass_frame.pack_forget()
+    removeStudentClass_frame.pack_forget()
+    admin_removeStudent_frame.pack_forget()
+    login_frame.pack()
+    admin_main_frame.pack_forget()
+    admin_removeInstructor_frame.pack_forget()
+
 
 def show_signup_page():
     login_frame.pack_forget()
@@ -638,6 +722,17 @@ admin_remove_Instructor = tk.Button(admin_main_frame, text="Remove Instructor", 
 admin_remove_Instructor.grid(row=3, column=2, pady=10)
 
 
+tk.Label(admin_main_frame,text="").grid(column=1,row=4)
+tk.Label(admin_main_frame,text="").grid(column=1,row=5)
+tk.Label(admin_main_frame,text="").grid(column=1,row=6)
+tk.Label(admin_main_frame,text="").grid(column=1,row=7)
+tk.Label(admin_main_frame,text="").grid(column=1,row=8)
+tk.Label(admin_main_frame,text="").grid(column=1,row=9)
+
+
+admin_back_Button = tk.Button(admin_main_frame, text="Back", command=ReturnToLogin)
+admin_back_Button.grid(row=10, column=2, pady=10)
+
 #Admin Update Class
 admin_remove_class_frame = tk.Frame(root, padx=20, pady=20)
 
@@ -645,7 +740,7 @@ tk.Label(admin_remove_class_frame, text="CRN", font=("Arial", 12)).grid(row=1, c
 ClassRemoveCRN = tk.Entry(admin_remove_class_frame, font=("Arial", 12))
 ClassRemoveCRN.grid(row=1, column=2, pady=10)
 
-admin_remove_class_confirm = tk.Button(admin_remove_class_frame, text="Confirm")
+admin_remove_class_confirm = tk.Button(admin_remove_class_frame, text="Confirm",command= adminRemoveCourse)
 admin_remove_class_confirm.grid(row=2, column=1, pady=10)
 
 admin_remove_class_back = tk.Button(admin_remove_class_frame, text="Back", command=adminBackToMain)
@@ -691,9 +786,7 @@ ClassCredits.grid(row=7, column=2, pady=10)
 
 
 
-
-
-admin_add_class_confirm = tk.Button(admin_add_class_frame, text="Confirm")
+admin_add_class_confirm = tk.Button(admin_add_class_frame, text="Confirm",command=adminAddCourse)
 admin_add_class_confirm.grid(row=8, column=1, pady=10)
 
 admin_add_class_back = tk.Button(admin_add_class_frame, text="Back", command=adminBackToMain)
@@ -721,8 +814,8 @@ addStudentMajor = tk.Entry(admin_addStudent_frame, font=("Arial", 12))
 addStudentMajor.grid(row=4, column=2, pady=10)
 
 
-admin_update_confirm = tk.Button(admin_addStudent_frame, text="Confirm")
-admin_update_confirm.grid(row=5, column=0, pady=10)
+admin_update_confirm_add = tk.Button(admin_addStudent_frame, text="Confirm", command =adminAddStudent)
+admin_update_confirm_add.grid(row=5, column=0, pady=10)
 
 admin_update_back = tk.Button(admin_addStudent_frame, text="Back", command=adminBackToMain)
 admin_update_back.grid(row=5, column=1, pady=10)
@@ -735,8 +828,8 @@ tk.Label(admin_removeStudent_frame, text="ID", font=("Arial", 12)).grid(row=1, c
 removeStudentID = tk.Entry(admin_removeStudent_frame, font=("Arial", 12))
 removeStudentID.grid(row=1, column=2, pady=10)
 
-admin_update_confirm = tk.Button(admin_removeStudent_frame, text="Confirm")
-admin_update_confirm.grid(row=2, column=0, pady=10)
+admin_update_confirm_remove = tk.Button(admin_removeStudent_frame, text="Confirm",command= adminRemoveStudent)
+admin_update_confirm_remove.grid(row=2, column=0, pady=10)
 
 admin_update_back = tk.Button(admin_removeStudent_frame, text="Back", command=adminBackToMain)
 admin_update_back.grid(row=2, column=1, pady=10)
@@ -769,22 +862,22 @@ addInstructorTitle.grid(row=5, column=2, pady=10)
 
 
 
-admin_Instructor_update_confirm = tk.Button(admin_addInstructor_frame, text="Confirm")
-admin_Instructor_update_confirm.grid(row=6, column=0, pady=10)
+admin_Instructor_add = tk.Button(admin_addInstructor_frame, text="Confirm",command=adminAddInstructor)
+admin_Instructor_add.grid(row=6, column=0, pady=10)
 
 admin_Instructor_update_back = tk.Button(admin_addInstructor_frame, text="Back", command=adminBackToMain)
 admin_Instructor_update_back.grid(row=6, column=1, pady=10)
 
 
-#REMOVE STUDENT FRAME
+#REMOVE INSTRUCTOR FRAME
 admin_removeInstructor_frame = tk.Frame(root, padx=20, pady=20)
 
 tk.Label(admin_removeInstructor_frame, text="ID", font=("Arial", 12)).grid(row=1, column=0, pady=10, sticky="e")
 removeInstructorID = tk.Entry(admin_removeInstructor_frame, font=("Arial", 12))
 removeInstructorID.grid(row=1, column=2, pady=10)
 
-admin_update_confirm = tk.Button(admin_removeInstructor_frame, text="Confirm")
-admin_update_confirm.grid(row=2, column=0, pady=10)
+admin_Instructor_remove = tk.Button(admin_removeInstructor_frame, text="Confirm",command= adminRemoveInstructor)
+admin_Instructor_remove.grid(row=2, column=0, pady=10)
 
 admin_update_back = tk.Button(admin_removeInstructor_frame, text="Back", command=adminBackToMain)
 admin_update_back.grid(row=2, column=1, pady=10)
@@ -800,10 +893,10 @@ tk.Label(addStudentClass_frame, text="CRN", font=("Arial", 12)).grid(row=2, colu
 addStudentClass_CRN = tk.Entry(addStudentClass_frame, font=("Arial", 12))
 addStudentClass_CRN.grid(row=2, column=2, pady=10)
 
-addStudentClass_confirm = tk.Button(admin_addInstructor_frame, text="Confirm")
+addStudentClass_confirm = tk.Button(addStudentClass_frame, text="Confirm",command=adminAddStudentCourse)
 addStudentClass_confirm.grid(row=3, column=0, pady=10)
 
-addStudentClass_back = tk.Button(admin_addInstructor_frame, text="Back", command=adminBackToMain)
+addStudentClass_back = tk.Button(addStudentClass_frame, text="Back", command=adminBackToMain)
 addStudentClass_back.grid(row=3, column=1, pady=10)
 
 removeStudentClass_frame = tk.Frame(root, padx=20, pady=20 )
@@ -816,10 +909,10 @@ tk.Label(removeStudentClass_frame, text="CRN", font=("Arial", 12)).grid(row=2, c
 removeStudentClass_CRN = tk.Entry(removeStudentClass_frame, font=("Arial", 12))
 removeStudentClass_CRN.grid(row=2, column=2, pady=10)
 
-removeStudentClass_confirm = tk.Button(admin_addInstructor_frame, text="Confirm")
+removeStudentClass_confirm = tk.Button(removeStudentClass_frame, text="Confirm",command=adminRemoveStudentCourse)
 removeStudentClass_confirm.grid(row=3, column=0, pady=10)
 
-removeStudentClass_back = tk.Button(admin_addInstructor_frame, text="Back", command=adminBackToMain)
+removeStudentClass_back = tk.Button(removeStudentClass_frame, text="Back", command=adminBackToMain)
 removeStudentClass_back.grid(row=3, column=1, pady=10)
 
 

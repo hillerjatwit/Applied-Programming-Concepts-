@@ -405,7 +405,7 @@ class Instructor(User):
     def print_teaching(): #Regis
         instid = inst.ID
         inst_dept = conn.query(f"""SELECT DEPT FROM INSTRUCTOR WHERE ID = {instid} """)
-        query_result = conn.query(f"""SELECT * FROM COURSE WHERE DEPARTMENT = '{inst_dept[0]}'""")
+        query_result = conn.queryMany(f"""SELECT * FROM COURSE WHERE DEPARTMENT = '{inst_dept[0]}'""")
         print('Displayed below is your teaching schedule: ')
         for i in query_result:
             print(i)

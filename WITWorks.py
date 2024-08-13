@@ -2,8 +2,8 @@ import sqlite3
 from datetime import datetime
 import unittest
 import os
-from unittest.mock import patch
 import keyboard
+from unittest.mock import patch
 import time
 import tkinter as tk
 from tkinter import messagebox
@@ -389,7 +389,20 @@ class Admin(User):
             messagebox.showwarning("Failure","Please Fill Out all Rows")  
         
             
-            
+    def admin_search_filter():
+        try:
+            filter= SearchCourseType.get().upper()
+            search=SearchCourseEntry.get()
+            message = f"The Following Courses With The Filter {filter}:{search} Include: "
+            results = conn.queryMany(f"SELECT TITLE FROM COURSE WHERE {filter} = '{search}'")
+            for i in range(len(results)):
+                message =  message + "\n" + results[i][0]
+            messagebox.showwarning("Classes",message)    
+            adminBackToMain()
+
+        except:
+            messagebox.showwarning("Failure",f"Please Enter A Valid Filter Type")    
+
 
         
     def remove_course():        #Micah
@@ -428,8 +441,7 @@ class Admin(User):
             messagebox.showwarning("Failure",f"{stuID} Doesn't take {classCRN}")
 
     def change_instructor_dept():     
-        
-    
+
         try:
             instID = int(InstructorID_admin.get())
             newDept = newinstructorDept.get()
@@ -669,6 +681,13 @@ def adminChangeInstructorDept():
     change_dept_instructor_frame.pack()
     newinstructorDept_confirm.configure(command=Admin.change_instructor_dept)
 
+def adminSearchCourses():
+    admin_main_frame.pack_forget()
+    search_course_frame.pack()
+    search_course_frame_confirm.configure(command=Admin.admin_search_filter)
+
+
+
 def adminBackToMain():
     admin_addInstructor_frame.pack_forget()
     admin_remove_class_frame.pack_forget()
@@ -678,6 +697,7 @@ def adminBackToMain():
     removeStudentClass_frame.pack_forget()
     admin_removeStudent_frame.pack_forget()
     change_dept_instructor_frame.pack_forget()
+    search_course_frame.pack_forget()
     admin_main_frame.pack()
     admin_removeInstructor_frame.pack_forget()
 
@@ -811,8 +831,10 @@ admin_remove_Instructor.grid(row=3, column=2, pady=10)
 admin_change_instructor_dept = tk.Button(admin_main_frame, text="Change Instructor Dept", command=adminChangeInstructorDept)
 admin_change_instructor_dept.grid(row=4, column=1, pady=10)
 
+admin_filter_search = tk.Button(admin_main_frame, text="Change Instructor Dept", command=adminSearchCourses)
+admin_filter_search.grid(row=4, column=2, pady=10)
 
-tk.Label(admin_main_frame,text="").grid(column=2,row=4)
+tk.Label(admin_main_frame,text="").grid(column=3,row=4)
 tk.Label(admin_main_frame,text="").grid(column=1,row=5)
 tk.Label(admin_main_frame,text="").grid(column=1,row=6)
 tk.Label(admin_main_frame,text="").grid(column=1,row=7)
@@ -1023,8 +1045,28 @@ newinstructorDept_confirm.grid(row=3, column=0, pady=10)
 removeStudentClass_back = tk.Button(change_dept_instructor_frame, text="Back", command=adminBackToMain)
 removeStudentClass_back.grid(row=3, column=1, pady=10)
 
+#Serch Courses
+search_course_frame = tk.Frame(root, padx=20, pady=20 )
+
+tk.Label(search_course_frame, text="Please Enter A Filter Type and a Value", font=("Arial", 12)).grid(row=0, columnspan=3, pady=10, sticky="w")
+tk.Label(search_course_frame, text="CASE SENSETIVE", font=("Arial", 12)).grid(row=1, columnspan=3, pady=10, sticky="w")
+tk.Label(search_course_frame, text="Search Filter", font=("Arial", 12)).grid(row=3, column=0, pady=10, sticky="e")
+SearchCourseType = tk.Entry(search_course_frame, font=("Arial", 12))
+SearchCourseType.grid(row=3, column=2, pady=10)
+
+tk.Label(search_course_frame, text="Search", font=("Arial", 12)).grid(row=4, column=0, pady=10, sticky="e")
+SearchCourseEntry = tk.Entry(search_course_frame, font=("Arial", 12))
+SearchCourseEntry.grid(row=4, column=2, pady=10)
+
+
+search_course_frame_confirm = tk.Button(search_course_frame, text="Confirm",command=adminSearchCourses)
+search_course_frame_confirm.grid(row=5, column=0, pady=10)
+
+removeStudentClass_back = tk.Button(search_course_frame, text="Back", command=adminBackToMain)
+removeStudentClass_back.grid(row=5, column=1, pady=10)
+
+
 
 root.mainloop()
-
 
 

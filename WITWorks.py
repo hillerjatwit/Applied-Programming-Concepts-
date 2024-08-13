@@ -250,61 +250,61 @@ class Student(User):
             time3 = -12
         if time4 == 'None':
             time4 = -15
-
-        print("---------------------------")
-        print("(CLASSES ARE 1:50)")
-        print("Times of all 5 classes: ")
+        message ="(CLASSES ARE 1:50)"
+        message = message +  "\nTimes of all 5 classes: "
+        
         if int(time0) >= 0:
-            print("Class 1 starts at " + str(time0))
+            message = message + ("\nClass 1 starts at " + str(time0))
         if int(time1) >= 0:
-           print("Class 2 starts at " + str(time1))
+            message = message + ("\nClass 2 starts at " + str(time1))
         if int(time2) >= 0:
-            print("Class 3 starts at " + str(time2))
+            message = message + ("\nClass 3 starts at " + str(time2))
         if int(time3) >= 0:
-            print("Class 4 starts at " + str(time3))
+            message = message + ("\nClass 4 starts at " + str(time3))
         if int(time4) >= 0:
-            print("Class 5 starts at " + str(time4))
-        print("---------------------------")
+            message = message + ("\nClass 5 starts at " + str(time4))
         conflict = 0
         if (int(time0) == int(time1)) or (int(time0) == int(time2)) or (int(time0) == int(time3)) or (int(time0) == int(time4)):
-            print("Time confliction: Class 1 starts at same time as another class.")
+            message = message + "\nTime confliction: Class 1 starts at same time as another class."
             conflict = 1
         if (int(time1) == int(time0)) or (int(time1) == int(time2)) or (int(time1) == int(time3)) or (int(time1) == int(time4)):
-            print("Time confliction: Class 2 starts at same time as another class.")
+            message = message + ("\nTime confliction: Class 2 starts at same time as another class.")
             conflict = 1
         if (int(time2) == int(time1)) or (int(time2) == int(time0)) or (int(time2) == int(time3)) or (int(time2) == int(time4)):
-            print("Time confliction: Class 3 starts at same time as another class.")
+            message = message +("\nTime confliction: Class 3 starts at same time as another class.")
             conflict = 1
         if (int(time3) == int(time1)) or (int(time3) == int(time2)) or (int(time3) == int(time0)) or (int(time3) == int(time4)):
-            print("Time confliction: Class 4 starts at same time as another class.")
+            message = message +("\nTime confliction: Class 4 starts at same time as another class.")
             conflict = 1
         if (int(time4) == int(time1)) or (int(time4) == int(time2)) or (int(time4) == int(time3)) or (int(time4) == int(time0)):
-            print("Time confliction: Class 5 starts at same time as another class.")
+            message = message +("\nTime confliction: Class 5 starts at same time as another class.")
             conflict = 1
 
 
         if ((int(time0) + 1) == int(time1)) or ((int(time0) + 1) == int(time2)) or ((int(time0) + 1) == int(time3)) or ((int(time0) + 1) == int(time4)):
-            print("Time confliction: Another class begins during Class 1.")
+            message = message +("\nTime confliction: Another class begins during Class 1.")
             conflict = 1
         if ((int(time1) + 1) == int(time0)) or ((int(time1) + 1) == int(time2)) or ((int(time1) + 1) == int(time3)) or ((int(time1) + 1) == int(time4)):
-            print("Time confliction: Another class begins during Class 2.")
+            message = message +("\nTime confliction: Another class begins during Class 2.")
             conflict = 1
         if ((int(time2) + 1) == int(time1)) or ((int(time2) + 1) == int(time0)) or ((int(time2) + 1) == int(time3)) or ((int(time2) + 1) == int(time4)):
-            print("Time confliction: Another class begins during Class 3.")
+            message = message +("\nTime confliction: Another class begins during Class 3.")
             conflict = 1
         if ((int(time3) + 1) == int(time1)) or ((int(time3) + 1) == int(time2)) or ((int(time3) + 1) == int(time0)) or ((int(time3) + 1) == int(time4)):
-            print("Time confliction: Another class begins during Class 4.")
+            message = message +("\nTime confliction: Another class begins during Class 4.")
             conflict = 1
         if ((int(time4) + 1) == int(time1)) or ((int(time4) + 1) == int(time2)) or ((int(time4) + 1) == int(time3)) or ((int(time4) + 1) == int(time0)):
-            print("Time confliction: Another class begins during Class 5.")
+            message = message +("\nTime confliction: Another class begins during Class 5.")
             conflict = 1
 
         if conflict == 0:
-            print("No time conflictons")     
-    
+            message = message +("\nNo time conflictons")     
+        messagebox.showwarning("Course Conflicts ",message)    
+
 
     def printSchedule():
         studID = stud.ID
+        message = "Users Schedule is: "
         results = conn.queryMany(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{studID}' """)
         class1 = str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][0]}' """))
         class2= str(conn.query(f"""Select TITLE From COURSE Where CRN = '{results[0][1]}' """))
@@ -316,11 +316,13 @@ class Student(User):
         class3 = ''.join(e  for e in class3 if e.isalnum())
         class4 = ''.join(e  for e in class4 if e.isalnum())
         class5 = ''.join(e  for e in class5 if e.isalnum())
-        print("Class1 is: " + class1)
-        print("Class2 is: " + class2)
-        print("Class3 is: " + class3)
-        print("Class4 is: " + class4)
-        print("Class5 is: " + class5)
+        message = message + "\nClass1 is: " + class1
+        message = message + "\nClass2 is: " + class2
+        message = message + "\nClass3 is: " + class3
+        message = message + "\nClass4 is: " + class4
+        message = message + "\nClass5 is: " + class5
+        messagebox.showwarning("Classes Schedule ",message)    
+
 
     def student_search_filter():
         try:

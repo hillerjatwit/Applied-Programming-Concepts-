@@ -398,6 +398,9 @@ class Admin(User):
             for i in range(len(results)):
                 message =  message + "\n" + results[i][0]
             messagebox.showwarning("Classes",message)    
+            SearchCourseType.delete(0,tk.END)    
+            SearchCourseEntry.delete(0,tk.END)    
+
             adminBackToMain()
 
         except:

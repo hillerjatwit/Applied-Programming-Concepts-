@@ -322,6 +322,22 @@ class Student(User):
         print("Class4 is: " + class4)
         print("Class5 is: " + class5)
 
+    def student_search_filter():
+        try:
+            filter= student_SearchCourseType.get().upper()
+            search=student_SearchCourseEntry.get()
+            message = f"The Following Courses With The Filter {filter}:{search} Include: "
+            results = conn.queryMany(f"SELECT TITLE FROM COURSE WHERE {filter} = '{search}'")
+            for i in range(len(results)):
+                message =  message + "\n" + results[i][0]
+            messagebox.showwarning("Classes",message)    
+            student_SearchCourseType.delete(0,tk.END)    
+            student_SearchCourseEntry.delete(0,tk.END)    
+
+            showInstructorMainpage()
+
+        except:
+            messagebox.showwarning("Failure",f"Please Enter A Valid Filter Type")    
 
 
 class Instructor(User):
@@ -335,6 +351,24 @@ class Instructor(User):
     def __init__(self, id):
         self.ID = id
            
+    def instructor_search_filter():
+        try:
+            filter= instructor_SearchCourseType.get().upper()
+            search=instructor_SearchCourseEntry.get()
+            message = f"The Following Courses With The Filter {filter}:{search} Include: "
+            results = conn.queryMany(f"SELECT TITLE FROM COURSE WHERE {filter} = '{search}'")
+            for i in range(len(results)):
+                message =  message + "\n" + results[i][0]
+            messagebox.showwarning("Classes",message)    
+            instructor_SearchCourseType.delete(0,tk.END)    
+            instructor_SearchCourseEntry.delete(0,tk.END)    
+
+            showInstructorMainpage()
+
+        except:
+            messagebox.showwarning("Failure",f"Please Enter A Valid Filter Type")    
+
+
 
     def print_search_roster():     #Billy Hingston
         roster = [] 
@@ -633,25 +667,40 @@ def showStudentMainpage():
     login_frame.pack_forget()
     remove_course_frame.pack_forget()
     add_course_frame.pack_forget()
+    student_search_course_frame.pack_forget()
     main_student_frame.pack()
+
+
+
+def studentSearchCourses():
+    student_search_course_frame.pack()
+    main_student_frame.pack_forget()
+    student_search_course_frame_confirm.configure(command=Student.student_search_filter)
 
 
 def showStudentRemoveClass():
     remove_course_frame.pack()
     main_student_frame.pack_forget()
 
+
     
 def showStudentAddClass():
     add_course_frame.pack()
     main_student_frame.pack_forget()
 
+def instructorSearchCourses():
+    instructor_search_course_frame.pack()
+    inst_main_frame.pack_forget()
+    instructor_search_course_frame_confirm.configure(command=Instructor.instructor_search_filter)
 
 def showInstructorMainpage():
     login_frame.pack_forget()
     inst_print_schedule_button.pack_forget()
     inst_back_Button.pack_forget()
     inst_print_teach_button.pack_forget()
+    instructor_search_course_frame.pack_forget()
     inst_main_frame.pack()
+    
 
     
 def showAdminMainpage():
@@ -798,14 +847,35 @@ add_course_button = tk.Button(main_student_frame, text="Add Course", command=sho
 add_course_button.grid(row=0, column=1, pady=10)
 
 remove_course_button = tk.Button(main_student_frame, text="Remove Course", command=showStudentRemoveClass)
-remove_course_button.grid(row=0, column=2, pady=10)
+remove_course_button.grid(row=1, column=0, pady=10)
 
 check_conflicts_button = tk.Button(main_student_frame, text="Check Time Conflicts", command=Student.time_conflicts)
-check_conflicts_button.grid(row=0, column=3, pady=10)
+check_conflicts_button.grid(row=1, column=1, pady=10)
+
+search_courses_students = tk.Button(main_student_frame, text="Filtered Course Search", command=studentSearchCourses)
+search_courses_students.grid(row=3, column=0, pady=10)
 
 student_back_Button = tk.Button(main_student_frame, text="Back", command=ReturnToLogin)
-student_back_Button.grid(row=10, column=2, pady=10)
+student_back_Button.grid(row=10, column=4, pady=10)
 
+student_search_course_frame = tk.Frame(root,padx=20,pady=20)
+
+tk.Label(student_search_course_frame, text="Please Enter A Filter Type and a Value", font=("Arial", 12)).grid(row=0, columnspan=3, pady=10, sticky="w")
+tk.Label(student_search_course_frame, text="CASE SENSETIVE", font=("Arial", 12)).grid(row=1, columnspan=3, pady=10, sticky="w")
+tk.Label(student_search_course_frame, text="Search Filter", font=("Arial", 12)).grid(row=3, column=0, pady=10, sticky="e")
+student_SearchCourseType = tk.Entry(student_search_course_frame, font=("Arial", 12))
+student_SearchCourseType.grid(row=3, column=2, pady=10)
+
+tk.Label(student_search_course_frame, text="Search", font=("Arial", 12)).grid(row=4, column=0, pady=10, sticky="e")
+student_SearchCourseEntry = tk.Entry(student_search_course_frame, font=("Arial", 12))
+student_SearchCourseEntry.grid(row=4, column=2, pady=10)
+
+
+student_search_course_frame_confirm = tk.Button(student_search_course_frame, text="Confirm",command=adminSearchCourses)
+student_search_course_frame_confirm.grid(row=5, column=0, pady=10)
+
+student_search_course_back = tk.Button(student_search_course_frame, text="Back", command=showStudentMainpage)
+student_search_course_back.grid(row=5, column=1, pady=10)
 
 
 
@@ -834,6 +904,8 @@ add_course_submit_button.grid(row=2, column=0, pady=10)
 #Instructor Page GUI Items----------------------------------------------------------------------------------------------------------------------------
 inst_main_frame = tk.Frame(root, padx=20, pady=20)
 
+
+
 #print/search course roster
 inst_print_schedule_button = tk.Button(inst_main_frame, text="Print Schedule", command=Instructor.print_search_roster)
 inst_print_schedule_button.grid(row=0, column=0, pady=10)
@@ -845,6 +917,29 @@ inst_print_teach_button.grid(row=1, column=0, pady=10)
 #return to login
 inst_back_Button = tk.Button(inst_main_frame, text="Back", command=ReturnToLogin)
 inst_back_Button.grid(row=10, column=2, pady=10)
+
+instructor_search_for_course = tk.Button(inst_main_frame, text="Filtered Course Search", command=instructorSearchCourses)
+instructor_search_for_course.grid(row=1, column=1, pady=10)
+
+instructor_search_course_frame = tk.Frame(root,padx=20,pady=20)
+
+tk.Label(instructor_search_course_frame , text="Please Enter A Filter Type and a Value", font=("Arial", 12)).grid(row=0, columnspan=3, pady=10, sticky="w")
+tk.Label(instructor_search_course_frame , text="CASE SENSETIVE", font=("Arial", 12)).grid(row=1, columnspan=3, pady=10, sticky="w")
+tk.Label(instructor_search_course_frame , text="Search Filter", font=("Arial", 12)).grid(row=3, column=0, pady=10, sticky="e")
+instructor_SearchCourseType = tk.Entry(instructor_search_course_frame , font=("Arial", 12))
+instructor_SearchCourseType.grid(row=3, column=2, pady=10)
+
+tk.Label(instructor_search_course_frame , text="Search", font=("Arial", 12)).grid(row=4, column=0, pady=10, sticky="e")
+instructor_SearchCourseEntry = tk.Entry(instructor_search_course_frame , font=("Arial", 12))
+instructor_SearchCourseEntry.grid(row=4, column=2, pady=10)
+
+
+instructor_search_course_frame_confirm = tk.Button(instructor_search_course_frame, text="Confirm",command=adminSearchCourses)
+instructor_search_course_frame_confirm.grid(row=5, column=0, pady=10)
+
+instructor_search_course_back = tk.Button(instructor_search_course_frame, text="Back", command=showInstructorMainpage)
+instructor_search_course_back.grid(row=5, column=1, pady=10)
+
 
 
 

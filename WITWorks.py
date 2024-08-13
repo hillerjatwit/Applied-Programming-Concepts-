@@ -336,7 +336,7 @@ class Student(User):
             student_SearchCourseType.delete(0,tk.END)    
             student_SearchCourseEntry.delete(0,tk.END)    
 
-            showInstructorMainpage()
+            showStudentMainpage()
 
         except:
             messagebox.showwarning("Failure",f"Please Enter A Valid Filter Type")    

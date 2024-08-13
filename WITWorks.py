@@ -178,44 +178,52 @@ class Student(User):
 
     #Jared
     def addCourse():
-         #Check if CRN exists
-        CRN = add_course_CRN.get()
-        Add = False
-        
-        results = conn.query(f"SELECT * FROM COURSE WHERE CRN = '{CRN}'")
-        if (results is not None):
-            #Need logic to check if credits match
-            row =  list(conn.query(f"SELECT CLASS1, CLASS2, CLASS3, CLASS4, CLASS5 FROM STUDENT WHERE ID = '{stud.ID}'"))
-            for i in range(5):
-                if row[i] is None:
-                    Add = True
-                    conn.queryExecute(f"UPDATE STUDENT SET CLASS{i+1} = '{CRN}' WHERE ID = '{stud.ID}'")
-                    print("Class has been updated")
+        stuID = stud.ID
+        ClassAdd = add_course_CRN.get()
+   
+
+        results = conn.query(f"""Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = {stuID} """)
+        if results is not None:
+            classes = ['CLASS1', 'CLASS2', 'CLASS3', 'CLASS4', 'CLASS5']
+            nextClass = None
+
+            for i in range(len(results)):
+                if results[i] is None:
+                    nextClass = classes[i]
                     break
-            if (Add):
-                messagebox.showinfo(f"Course {CRN} was added")
+
+            if nextClass:
+                conn.queryExecute(f"""UPDATE STUDENT SET {nextClass} = {ClassAdd} WHERE ID = {stuID}""")
+                messagebox.showwarning("Success",f"{ClassAdd} Added To {stuID}'s Schedule")
+                addStudentClass_ID.delete(0,tk.END)
+                add_course_CRN.delete(0,tk.END)
+                showStudentMainpage()
+
             else:
-                messagebox.showinfo(f"Course {CRN} was not added")
+              messagebox.showwarning("Failure",f" {stuID}'s Schedule Is Full")
+        else:
+            messagebox.showwarning("Fallure",f"No Student With ID {stuID} Exists")
     #Jared
-    def removeCourse():
-        #Check if CRN exists
-        CRN = int(remove_course_CRN.get())
-        Found = False
+    def removeCourse():     
         
-        results = conn.query(f"SELECT * FROM COURSE WHERE CRN = '{CRN}'")
-        if (results is not None):
-            #Need logic to check if credits match
-            row =  list(conn.query(f"SELECT CLASS1, CLASS2, CLASS3, CLASS4, CLASS5 FROM STUDENT WHERE ID = '{stud.ID}'"))
-            for i in range(5):
-                if (row[i] == CRN):
-                    Found = True
-                    conn.queryExecute(f"UPDATE STUDENT SET CLASS{i+1} = 'NULL' WHERE ID = '{stud.ID}'")
-            
-            if (Found):
-                messagebox.showinfo(f"Course {CRN} was Removed")
-            else:
-                messagebox.showinfo(f"Course {CRN} was not Found")
+        stuID = stud.ID
+        classCRN = remove_course_CRN.get()
+        
+        results = conn.query(f"Select CLASS1,CLASS2,CLASS3,CLASS4,CLASS5 From STUDENT Where ID = '{stuID}' ")
+
+        try:
+            conn.queryExecute(f"SELECT NAME FROM STUDENT WHERE ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS1 = NULL WHERE CLASS1 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute (f"UPDATE STUDENT SET CLASS2 = NULL WHERE CLASS2 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS3 = NULL WHERE CLASS3 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS4 = NULL WHERE CLASS4 = {classCRN} AND ID = {stuID}")
+            conn.queryExecute(f"UPDATE STUDENT SET CLASS5 = NULL WHERE CLASS5 = {classCRN} AND ID = {stuID}")
+            messagebox.showwarning("Success",f"Course {classCRN} Deleted From {stuID}")
+            removeStudentClass_ID.delete(0,tk.END)
+            removeStudentClass_CRN.delete(0,tk.END)
             showStudentMainpage()
+        except:
+            messagebox.showwarning("Failure",f"{stuID} Doesn't take {classCRN}")
     
     def time_conflicts():
         studID = stud.ID
@@ -241,6 +249,7 @@ class Student(User):
             time3 = -12
         if time4 == 'None':
             time4 = -15
+
         print("---------------------------")
         print("(CLASSES ARE 1:50)")
         print("Times of all 5 classes: ")
@@ -620,13 +629,16 @@ def showStudentMainpage():
     add_course_frame.pack_forget()
     main_student_frame.pack()
 
+
 def showStudentRemoveClass():
-    admin_main_frame.pack_forget()
     remove_course_frame.pack()
+    main_student_frame.pack_forget()
+
     
 def showStudentAddClass():
-    admin_main_frame.pack_forget()
     add_course_frame.pack()
+    main_student_frame.pack_forget()
+
     
 def showAdminMainpage():
     login_frame.pack_forget()
@@ -753,7 +765,11 @@ login_button.grid(row=2, column=0, pady=10)
 
 
 
-# Student Page GUI Items
+# Student Page GUI Items -----------------------------------------------------------------------------------------------------------------------------
+add_course_frame = tk.Frame(root, padx=20, pady=20)
+
+remove_course_frame = tk.Frame(root, padx=20, pady=20)
+
 main_student_frame = tk.Frame(root, padx=20, pady=20)
 
 print_schedule_button = tk.Button(main_student_frame, text="Print Schedule", command=Student.printSchedule)
@@ -772,7 +788,7 @@ student_back_Button = tk.Button(main_student_frame, text="Back", command=ReturnT
 student_back_Button.grid(row=10, column=2, pady=10)
 
 
-remove_course_frame = tk.Frame(root, padx=20, pady=20)
+
 
 tk.Label(remove_course_frame, text="Enter CRN", font=("Arial", 12)).grid(row=1, column=0, pady=10, sticky="e")
 remove_course_CRN = tk.Entry(remove_course_frame, font=("Arial", 12))
@@ -834,7 +850,7 @@ admin_remove_Instructor.grid(row=3, column=2, pady=10)
 admin_change_instructor_dept = tk.Button(admin_main_frame, text="Change Instructor Dept", command=adminChangeInstructorDept)
 admin_change_instructor_dept.grid(row=4, column=1, pady=10)
 
-admin_filter_search = tk.Button(admin_main_frame, text="Change Instructor Dept", command=adminSearchCourses)
+admin_filter_search = tk.Button(admin_main_frame, text="Filtered Course Search", command=adminSearchCourses)
 admin_filter_search.grid(row=4, column=2, pady=10)
 
 tk.Label(admin_main_frame,text="").grid(column=3,row=4)
@@ -1071,5 +1087,4 @@ removeStudentClass_back.grid(row=5, column=1, pady=10)
 
 
 root.mainloop()
-
 

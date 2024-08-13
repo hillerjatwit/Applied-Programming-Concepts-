@@ -109,6 +109,7 @@ class User:
                 showStudentMainpage()
             elif(Type[0] == 'INSTRUCTOR'):
                 inst = Instructor(ID)
+                showInstructorMainpage()
                 #show instructor main page
             elif(Type[0] == 'ADMIN'):
                 admin = Admin(ID)
@@ -331,42 +332,47 @@ class Instructor(User):
     HireYear=None
     Department=None
     
-    def __init__(self, in_name):
-        self.roster = []    
-        self.sur_name = in_name
+    def __init__(self, id):
+        self.ID = id
+           
 
-    def print_roster(self):     #Billy Hingston
+    def print_search_roster():     #Billy Hingston
+        roster = [] 
         crn = input("To see all students in the course, enter CRN of course: ")
-        query_result = self.conn.query("SELECT NAME from STUDENT where CLASS1 =  '" + crn + "'")
+        for num in range(5):
+            query_result = conn.query(f"SELECT NAME from STUDENT where CLASS{num + 1} =  '" + crn + "'")
+    
+            if query_result is not None:
+                app = query_result
+                roster.append(app)
+                namecount = 0
+                print (roster[num][0])
+                if testactive:
+                        assert str(i[0]) == str(testassert[namecount + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
+                        print('✔ Test Passed!') 
+                        namecount += 1        
+        search = input("If you would like to search for a specific student, press 1. Otherwise, press 0 to return to the main menu: ") #Regis
+        if search == '1':
+            student_found = 0
+            get_student = input("Please enter the first name of the student you want to search for: ")
+            for i in roster:
+                if i[0] == get_student:
+                    student_found = 1
+                    print(i[0])
+            if student_found == 0:
+                print("Student not found!")
+
+   # def SearchCourseRoster(self):
+   #    #functionality merged into print_search_roster        
+   #   return True
+
+    def print_teaching(): #Regis
+        instid = inst.ID
+        inst_dept = conn.query(f"""SELECT DEPT FROM INSTRUCTOR WHERE ID = {instid} """)
+        query_result = conn.query(f"""SELECT * FROM COURSE WHERE DEPARTMENT = '{inst_dept[0]}'""")
+        print('Displayed below is your teaching schedule: ')
         for i in query_result:
-            app = i
-            self.roster.append(app)
-        query_result = self.conn.query("SELECT NAME from STUDENT where CLASS2 =  '" + crn + "'")
-        for i in query_result:
-            app = i
-            self.roster.append(app)
-        query_result = self.conn.query("SELECT NAME from STUDENT where CLASS3 =  '" + crn + "'")
-        for i in query_result:
-            app = i
-            self.roster.append(app)
-        query_result = self.conn.query("SELECT NAME from STUDENT where CLASS4 =  '" + crn + "'")
-        for i in query_result:
-            app = i
-            self.roster.append(app)
-        query_result = self.conn.query("SELECT NAME from STUDENT where CLASS5 =  '" + crn + "'")
-        for i in query_result:
-            app = i
-            self.roster.append(app)
-        namecount = 0
-        for i in self.roster:
-            print (i)
-            if testactive:
-                    assert str(i[0]) == str(testassert[namecount + 1]), f'X Results do not match. Expected Value: {testassert[count]}. Actual Value: {i[count]}'
-                    print('✔ Test Passed!') 
-                    namecount += 1        
-    # def SearchCourseRoster(self):
-    #     #IDK what this is supposed to do
-    #     return True
+            print(i)
        
 class Admin(User):
     
@@ -639,6 +645,14 @@ def showStudentAddClass():
     add_course_frame.pack()
     main_student_frame.pack_forget()
 
+
+def showInstructorMainpage():
+    login_frame.pack_forget()
+    inst_print_schedule_button.pack_forget()
+    inst_back_Button.pack_forget()
+    inst_print_teach_button.pack_forget()
+    inst_main_frame.pack()
+
     
 def showAdminMainpage():
     login_frame.pack_forget()
@@ -717,6 +731,10 @@ def adminBackToMain():
     admin_removeInstructor_frame.pack_forget()
 
 def ReturnToLogin():
+    inst_print_schedule_button.pack_forget()
+    inst_back_Button.pack_forget()
+    inst_print_teach_button.pack_forget()
+
     admin_addInstructor_frame.pack_forget()
     admin_remove_class_frame.pack_forget()
     admin_add_class_frame.pack_forget()
@@ -728,6 +746,7 @@ def ReturnToLogin():
     admin_main_frame.pack_forget()
     admin_removeInstructor_frame.pack_forget()
     main_student_frame.pack_forget()
+    inst_main_frame.pack_forget()
 
 
 
@@ -812,14 +831,24 @@ add_course_back_button.grid(row=2, column=1, pady=10)
 add_course_submit_button = tk.Button(add_course_frame, text="Submit Course", command=Student.addCourse)
 add_course_submit_button.grid(row=2, column=0, pady=10)
 
-#Instructor Page GUI Items
+#Instructor Page GUI Items----------------------------------------------------------------------------------------------------------------------------
 inst_main_frame = tk.Frame(root, padx=20, pady=20)
 
-inst_print_schedule_button = tk.Button(inst_main_frame, text="Print Schedule", command=Instructor.print_roster)
+#print/search course roster
+inst_print_schedule_button = tk.Button(inst_main_frame, text="Print Schedule", command=Instructor.print_search_roster)
 inst_print_schedule_button.grid(row=0, column=0, pady=10)
 
+#print courses being taught by instructor
+inst_print_teach_button = tk.Button(inst_main_frame, text="Print Course Schedule", command=Instructor.print_teaching)
+inst_print_teach_button.grid(row=1, column=0, pady=10)
 
-#Admin Page GUI Items
+#return to login
+inst_back_Button = tk.Button(inst_main_frame, text="Back", command=ReturnToLogin)
+inst_back_Button.grid(row=10, column=2, pady=10)
+
+
+
+#Admin Page GUI Items----------------------------------------------------------------------------------------------------------------------------
 admin_main_frame = tk.Frame(root, padx=20, pady=20)
 
 #main Admin Page
@@ -1087,4 +1116,3 @@ removeStudentClass_back.grid(row=5, column=1, pady=10)
 
 
 root.mainloop()
-
